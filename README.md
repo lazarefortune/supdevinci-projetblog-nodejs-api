@@ -1,4 +1,4 @@
-## Backend d'un mini blog en Node JS
+## 🌄 Backend d'un mini blog en Node JS
 
 ### Prérequis
 
@@ -31,5 +31,5 @@ npm run knex seed:run
 ### Pour lancer le serveur
 
 ```bash
-npm run dev
+npm run dev / npm run start
 ```
