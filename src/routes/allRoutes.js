@@ -1,5 +1,5 @@
-import productsRoutes from "./postsRoutes.js";
-import usersRoutes from "./usersRoutes.js";
+import productsRoutes from "./posts.js";
+import usersRoutes from "./users.js";
 
 const allRoutes = (app) => {
   usersRoutes(app);
