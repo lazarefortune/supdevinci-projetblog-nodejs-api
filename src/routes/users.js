@@ -5,6 +5,15 @@ const usersRoutes = (app) => {
     res.send("ALl users");
   });
 
+  /**
+   * @swagger
+   * /users:
+   *  get:
+   *    description: Use to request all users
+   *    responses:
+   *      '200':
+   *          description: A successful response
+   */
   app.get("/users", async (req, res) => {
     await User.query().then((users) => {
       res.send(users);
