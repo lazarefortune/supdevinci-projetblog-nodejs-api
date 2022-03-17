@@ -13,6 +13,8 @@ Model.knex(db);
 
 const PORT = config.port;
 
+app.use(express.json());
+
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
