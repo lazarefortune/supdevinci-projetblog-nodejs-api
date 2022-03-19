@@ -6,7 +6,7 @@ const createFakeComment = () => {
     content: faker.lorem.paragraph(),
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
-    userId: getRandomNumberBetween(1, 10),
+    authorId: getRandomNumberBetween(1, 10),
     postId: getRandomNumberBetween(1, 100),
   };
 };

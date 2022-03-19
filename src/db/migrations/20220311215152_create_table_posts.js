@@ -10,8 +10,8 @@ export async function up(knex) {
     table.datetime("createdAt").notNullable();
     table.datetime("updatedAt").notNullable();
     table.boolean("isPublished").notNullable();
-    table.integer("userId").notNullable();
-    table.foreign("userId").references("users");
+    table.integer("authorId").notNullable();
+    table.foreign("authorId").references("users");
   });
 }
 

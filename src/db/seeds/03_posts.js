@@ -8,7 +8,7 @@ const createFakePost = () => {
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
     isPublished: faker.datatype.boolean(),
-    userId: getRandomNumberBetween(1, 10),
+    authorId: getRandomNumberBetween(1, 10),
   };
 };
 

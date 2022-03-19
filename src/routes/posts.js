@@ -34,7 +34,7 @@ const postsRoutes = (app) => {
   });
 
   app.post("/posts", async (req, res) => {
-    const { title, content, isPublished, createdAt, updatedAt, userId } =
+    const { title, content, isPublished, createdAt, updatedAt, authorId } =
       req.body;
 
     const post = await Post.query().findOne({ title });
@@ -44,7 +44,7 @@ const postsRoutes = (app) => {
       return;
     }
 
-    const user = await User.query().findById(userId);
+    const user = await User.query().findById(authorId);
 
     console.log(user);
     if (!user) {
@@ -55,7 +55,7 @@ const postsRoutes = (app) => {
 
     try {
       Post.query()
-        .insert({ title, content, isPublished, createdAt, updatedAt, userId })
+        .insert({ title, content, isPublished, createdAt, updatedAt, authorId })
         .then((post) => {
           res.send(post);
         });

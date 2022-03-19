@@ -20,7 +20,7 @@ class Comment extends Model {
         relation: Model.BelongsToOneRelation,
         modelClass: User,
         join: {
-          from: "comments.userId",
+          from: "comments.authorId",
           to: "users.id",
         },
       },

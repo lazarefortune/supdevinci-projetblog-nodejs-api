@@ -8,9 +8,9 @@ export async function up(knex) {
     table.text("content").notNullable();
     table.datetime("createdAt").notNullable();
     table.datetime("updatedAt").notNullable();
-    table.integer("userId");
-    table.integer("postId");
-    table.foreign("userId").references("users");
+    table.integer("authorId").notNullable();
+    table.integer("postId").notNullable();
+    table.foreign("authorId").references("users");
     table.foreign("postId").references("posts");
   });
 }
