@@ -31,6 +31,9 @@ const schema = yup.object().shape({
       expireAfter: yup.string().oneOf(["2 days", "3 days"]),
     }),
   }),
+  webapp: yup.object().shape({
+    origin: yup.string().required(),
+  }),
 });
 
 const data = {
@@ -63,6 +66,9 @@ const data = {
       expireAfter: "3 days",
     },
   },
+  webapp: {
+    origin: process.env.WEBAPP_ORIGIN,
+  }
 };
 
 const config = schema.validateSync(data);

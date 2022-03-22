@@ -5,6 +5,7 @@ import config from "./config.js";
 import allRoutes from "./src/routes/allRoutes.js";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 
 const db = knex(config.db);
 const app = express();
@@ -14,6 +15,8 @@ Model.knex(db);
 const PORT = config.port;
 
 app.use(express.json());
+
+app.use(cors({ origin: config.webapp.origin }));
 
 const swaggerOptions = {
   swaggerDefinition: {
