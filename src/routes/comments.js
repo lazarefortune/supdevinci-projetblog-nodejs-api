@@ -69,7 +69,7 @@ const commentsRoutes = (app) => {
     res.status(201).send(comment);
   });
 
-  app.put("/comments/:id", async (req, res) => {
+  app.patch("/comments/:id", async (req, res) => {
     const { id: commentId } = req.params;
 
     const { content, updatedAt } = req.body;
@@ -88,6 +88,30 @@ const commentsRoutes = (app) => {
     });
 
     res.send(updatedComment);
+  });
+
+  app.put("/comments/:id", async (req, res) => {
+    const { id: commentId } = req.params;
+
+    const { content, updatedAt } = req.body;
+
+    const comment = await Comment.query().findById(commentId);
+
+    if (!comment) {
+      res.status(404).send({ error: "Sorry, comment not found !" });
+
+      return;
+    }
+
+    await comment
+      .$query()
+      .update({
+        content,
+        updatedAt,
+      })
+      .where("id", commentId);
+
+    res.send(comment);
   });
 
   app.delete("/comments/:id", async (req, res) => {
