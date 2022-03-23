@@ -12,9 +12,21 @@ const usersRoutes = (app) => {
    *          description: A successful response
    */
   app.get("/users", async (req, res) => {
-    await User.query().then((users) => {
+    const { page, limit, orderBy } = req.query;
+
+    // TODO: make pagination and limit
+    if (limit) {
+      const users = await User.query().withGraphFetched("role").limit(limit);
       res.send(users);
-    });
+
+      return;
+    }
+
+    await User.query()
+      .withGraphFetched("role")
+      .then((users) => {
+        res.send(users);
+      });
   });
 
   /**
@@ -42,7 +54,7 @@ const usersRoutes = (app) => {
   app.get("/users/:id", async (req, res) => {
     const { id: userId } = req.params;
 
-    const user = await User.query().findById(userId);
+    const user = await User.query().withGraphFetched("role").findById(userId);
 
     if (!user) {
       res.status(404).send({ error: "Sorry, User not found !" });
@@ -64,7 +76,7 @@ const usersRoutes = (app) => {
       updatedAt,
     } = req.body;
 
-    const user = await User.query().findOne({ email });
+    const user = await User.query().withGraphFetched("role").findOne({ email });
 
     if (user) {
       res.status(409).send("User already exists");
@@ -95,7 +107,7 @@ const usersRoutes = (app) => {
     const { firstName, lastName, displayName, email, password, updatedAt } =
       req.body;
 
-    const user = await User.query().findById(id);
+    const user = await User.query().withGraphFetched("role").findById(id);
     if (!user) {
       res.status(404).send("User not found");
 

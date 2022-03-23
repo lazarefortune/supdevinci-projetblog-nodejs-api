@@ -4,8 +4,18 @@ import Post from "../db/models/Post.js";
 
 const commentsRoutes = (app) => {
   app.get("/comments", async (req, res) => {
+
+    const { page, limit } = req.query;
+
+    if (limit) {
+      const comments = await Comment.query().withGraphFetched("[author, post]").limit(limit);
+      res.send(comments);
+
+      return;
+    }
+
     await Comment.query()
-      .withGraphFetched("author")
+      .withGraphFetched("[author, post]")
       .then((comments) => {
         res.send(comments);
       });
@@ -15,7 +25,7 @@ const commentsRoutes = (app) => {
     const { id: commentId } = req.params;
 
     const comment = await Comment.query()
-      .withGraphFetched("author", "post")
+      .withGraphFetched("[author, post]")
       .findById(commentId);
 
     if (!comment) {

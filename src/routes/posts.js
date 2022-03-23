@@ -14,15 +14,26 @@ const postsRoutes = (app) => {
    *          description: Error internal server
    */
   app.get("/posts", async (req, res) => {
-    await Post.query().then((posts) => {
+    const { page, limit } = req.query;
+
+    if (limit) {
+      const posts = await Post.query().withGraphFetched("author").limit(limit);
       res.send(posts);
-    });
+
+      return;
+    }
+
+    await Post.query()
+      .withGraphFetched("author")
+      .then((posts) => {
+        res.send(posts);
+      });
   });
 
   app.get("/posts/:id", async (req, res) => {
     const { id: postId } = req.params;
 
-    const post = await Post.query().findById(postId);
+    const post = await Post.query().withGraphFetched("author").findById(postId);
 
     if (!post) {
       res.status(404).send({ error: "Sorry, Post not found !" });
