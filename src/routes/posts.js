@@ -75,10 +75,10 @@ const postsRoutes = (app) => {
     }
   });
 
-  app.put("/posts/:id", async (req, res) => {
+  app.patch("/posts/:id", async (req, res) => {
     const {
       params: { id: postId },
-      body: { title, content, updatedAt, isPublished },
+      body: { title, content, updatedAt, isPublished, authorId },
     } = req;
 
     const post = await Post.query().findById(postId);
@@ -89,6 +89,46 @@ const postsRoutes = (app) => {
       return;
     }
 
+    if (title) {
+      const samePost = await Post.query().findOne({ title });
+
+      if (samePost && samePost.id !== Number(postId)) {
+        res.status(409).send({ error: "Sorry, post title already exist !" });
+
+        return;
+      }
+    }
+
+    // TODO: Vérifier que la valeur de "isPublished" est booléenne
+    await post
+      .$query()
+      .patch({
+        title,
+        content,
+        updatedAt,
+        isPublished,
+        authorId,
+      })
+      .where("id", postId);
+
+    res.send(post);
+  });
+
+  app.put("/posts/:id", async (req, res) => {
+    const {
+      params: { id: postId },
+      body: { title, content, createdAt, updatedAt, isPublished, authorId },
+    } = req;
+
+    const post = await Post.query().findById(postId);
+
+    if (!post) {
+      res.status(404).send({ error: "Sorry, post not found !" });
+
+      return;
+    }
+
+    // TODO: Vérifier l'existence de "title" avant de continuer
     const samePost = await Post.query().findOne({ title });
 
     if (samePost && samePost.id !== Number(postId)) {
@@ -103,8 +143,10 @@ const postsRoutes = (app) => {
         .update({
           title,
           content,
+          createdAt,
           updatedAt,
           isPublished,
+          authorId,
         })
         .where("id", postId);
     } catch (error) {
