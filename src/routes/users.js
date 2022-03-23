@@ -102,6 +102,31 @@ const usersRoutes = (app) => {
       });
   });
 
+  app.patch("/users/:id", async (req, res) => {
+    const { id } = req.params;
+    const { firstName, lastName, displayName, email, password, updatedAt } =
+      req.body;
+
+    const user = await User.query().withGraphFetched("role").findById(id);
+    if (!user) {
+      res.status(404).send("User not found");
+
+      return;
+    }
+
+    const datas = { firstName, lastName, displayName, email, updatedAt };
+
+    if (password) {
+      const [passwordHash, passwordSalt] = hashPassword(password);
+      datas.passwordHash = passwordHash;
+      datas.passwordSalt = passwordSalt;
+    }
+
+    await user.$query().patch(datas).where("id", id);
+
+    res.send(user);
+  });
+
   app.put("/users/:id", async (req, res) => {
     const { id } = req.params;
     const { firstName, lastName, displayName, email, password, updatedAt } =
