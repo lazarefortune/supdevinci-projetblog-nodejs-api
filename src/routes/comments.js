@@ -37,6 +37,19 @@ const commentsRoutes = (app) => {
     res.send(comment);
   });
 
+  app.get("/posts/:id/comments", async (req, res) => {
+    const { id: postId } = req.params;
+
+    if (!Number(postId)) {
+      res.status(400).send({ error: "Sorry postId are missing !" });
+
+      return;
+    }
+    const comments = await Comment.query().where("postId", postId);
+
+    res.send(comments);
+  });
+
   app.post("/comments", async (req, res) => {
     const { content, createdAt, updatedAt, authorId, postId } = req.body;
 
