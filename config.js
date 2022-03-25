@@ -36,17 +36,36 @@ const schema = yup.object().shape({
   }),
 });
 
+const env = process.env;
+
+let connection = {};
+
+if (env.NODE_ENV == "development" || env.NODE_ENV == "production") {
+  connection = {
+    host: env.DB_HOST,
+    port: env.DB_PORT,
+    user: env.DB_USER,
+    password: env.DB_PASSWORD,
+    database: env.DB_NAME,
+  };
+}
+
+if (env == "test") {
+  connection = {
+    host: env.DB_HOST_TEST,
+    port: env.DB_PORT_TEST,
+    user: env.DB_USER_TEST,
+    password: env.DB_PASSWORD_TEST,
+    database: env.DB_NAME_TEST,
+  };
+}
+
 const data = {
-  port: process.env.APP_PORT,
+  environment: env.NODE_ENV,
+  port: env.APP_PORT,
   db: {
-    client: process.env.DB_CLIENT,
-    connection: {
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-    },
+    client: env.DB_CLIENT,
+    connection,
     migrations: {
       directory: "./src/db/migrations/",
     },
@@ -56,19 +75,19 @@ const data = {
   },
   security: {
     password: {
-      pepper: process.env.SECURITY_PASSWORD_PEPPER,
+      pepper: env.SECURITY_PASSWORD_PEPPER,
       iteration: 10000,
       keylen: 512,
       digest: "sha512",
     },
     session: {
-      secret: process.env.SECURITY_SESSION_SECRET,
+      secret: env.SECURITY_SESSION_SECRET,
       expireAfter: "3 days",
     },
   },
   webapp: {
-    origin: process.env.WEBAPP_ORIGIN,
-  }
+    origin: env.WEBAPP_ORIGIN,
+  },
 };
 
 const config = schema.validateSync(data);

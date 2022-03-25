@@ -30,6 +30,15 @@ npm run knex seed:run
 
 ### Pour lancer le serveur
 
+* En mode production
 ```bash
-npm run dev / npm run start
+npm run start
+```
+* En mode développement
+```bash
+npm run dev
+```
+* Pour lancer les tests
+```bash
+npm run test
 ```

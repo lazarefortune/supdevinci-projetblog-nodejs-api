@@ -38,5 +38,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 allRoutes(app);
 
 app.listen(PORT, () => {
-  console.log(`Listen on port ${PORT}`);
+  console.log(`Environment: ${config.environment}`);
+  console.log(`Listening on port ${PORT}`);
 });
