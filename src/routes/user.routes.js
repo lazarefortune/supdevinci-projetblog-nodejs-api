@@ -6,6 +6,7 @@ import {
   deleteUser,
   updatedUser,
   allUserPosts,
+  allUserComments,
 } from "../controllers/user.controller.js";
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.post("/", createUser);
 router.delete("/:id", deleteUser);
 // Other routes
 router.get("/:id/posts", allUserPosts);
+router.get("/:id/comments", allUserComments);
 
 export default router;

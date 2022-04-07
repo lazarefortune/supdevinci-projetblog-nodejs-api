@@ -92,3 +92,15 @@ export const findAllPosts = async (userId) => {
     throw error;
   }
 };
+
+export const findAllComments = async (userId) => {
+  try {
+    const user = await User.query().findById(userId);
+    if (!user) {
+      throw new appError(404, "fail", "No user found with that id");
+    }
+    return user.$relatedQuery("comments");
+  } catch (error) {
+    throw error;
+  }
+};

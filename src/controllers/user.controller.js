@@ -5,6 +5,7 @@ import {
   updateOneWithPatch,
   deleteOne,
   findAllPosts,
+  findAllComments,
 } from "../services/user.service.js";
 
 import hashPassword from "../security/password/hashPassword.js";
@@ -140,6 +141,22 @@ export const allUserPosts = async (req, res, next) => {
     }
 
     const posts = await findAllPosts(userId);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const allUserComments = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+
+    if (!userId || !Number(userId)) {
+      throw new AppError(404, "fail", "Missing user id");
+    }
+
+    const posts = await findAllComments(userId);
 
     res.status(200).json(posts);
   } catch (error) {
