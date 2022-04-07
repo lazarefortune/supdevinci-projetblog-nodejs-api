@@ -4,6 +4,7 @@ import {
   findAll,
   updateOneWithPatch,
   deleteOne,
+  findAllPosts,
 } from "../services/user.service.js";
 
 import hashPassword from "../security/password/hashPassword.js";
@@ -125,6 +126,22 @@ export const deleteUser = async (req, res, next) => {
       statusCode: 200,
       message: "User deleted",
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const allUserPosts = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+
+    if (!userId || !Number(userId)) {
+      throw new AppError(404, "fail", "Missing user id");
+    }
+
+    const posts = await findAllPosts(userId);
+
+    res.status(200).json(posts);
   } catch (error) {
     next(error);
   }

@@ -1,5 +1,6 @@
 import { Model } from "objection";
 import Role from "./role.model.js";
+import Post from "./post.model.js";
 
 class User extends Model {
   static tableName = "users";
@@ -31,6 +32,14 @@ class User extends Model {
 
   static get relationMappings() {
     return {
+      posts: {
+        relation: Model.HasManyRelation,
+        modelClass: Post,
+        join: {
+          from: "users.id",
+          to: "posts.authorId",
+        },
+      },
       role: {
         relation: Model.BelongsToOneRelation,
         modelClass: Role,

@@ -80,3 +80,15 @@ export const deleteOne = async (userId) => {
     throw error;
   }
 };
+
+export const findAllPosts = async (userId) => {
+  try {
+    const user = await User.query().findById(userId);
+    if (!user) {
+      throw new appError(404, "fail", "No user found with that id");
+    }
+    return user.$relatedQuery("posts");
+  } catch (error) {
+    throw error;
+  }
+};
