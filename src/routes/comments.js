@@ -1,6 +1,6 @@
 import Comment from "../db/models/Comment.js";
 import User from "../db/models/user.model.js";
-import Post from "../db/models/Post.js";
+import Post from "../db/models/post.model.js";
 
 const commentsRoutes = (app) => {
   app.get("/comments", async (req, res) => {

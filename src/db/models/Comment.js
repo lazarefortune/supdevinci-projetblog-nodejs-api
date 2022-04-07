@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import Post from "./Post.js";
+import Post from "./post.model.js";
 import User from "./user.model.js";
 
 class Comment extends Model {

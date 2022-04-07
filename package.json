@@ -8,6 +8,9 @@
     "start": "nodemon ./src/server.js",
     "dev": "nodemon ./src/server.js",
     "knex": "knex",
+    "migrate:reset": "npx knex migrate:rollback && npx knex migrate:latest",
+    "migrate:seed": "npx knex seed:run",
+    "database:migrate:seed": "npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run",
     "test": "jest",
     "prepare": "husky install",
     "release": "standard-version"
@@ -39,6 +42,7 @@
     "faker": "^5.5.3",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
-    "standard-version": "^9.3.2"
+    "standard-version": "^9.3.2",
+    "supertest": "^6.2.2"
   }
 }
