@@ -16,8 +16,8 @@ export const findAll = async (queryString) => {
       .sort()
       .paginate();
 
-    const Posts = await features.query;
-    return Posts;
+    const posts = await features.query;
+    return posts;
   } catch (error) {
     throw error;
   }

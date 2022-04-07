@@ -1,6 +1,6 @@
 import { Model } from "objection";
 import User from "./user.model.js";
-import Comment from "./Comment.js";
+import Comment from "./comment.model.js";
 
 class Post extends Model {
   static tableName = "posts";

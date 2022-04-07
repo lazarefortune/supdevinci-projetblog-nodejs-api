@@ -1,7 +1,6 @@
 import knex from "knex";
 import { Model } from "objection";
 import config from "./config/config.js";
-import allRoutes from "./routes/allRoutes.js";
 import app from "./app.js";
 
 process.on("uncaughtException", (err) => {
@@ -13,8 +12,6 @@ process.on("uncaughtException", (err) => {
 // Connect the database
 const db = knex(config.db);
 Model.knex(db);
-
-allRoutes(app);
 
 // Start the server
 const PORT = config.port;

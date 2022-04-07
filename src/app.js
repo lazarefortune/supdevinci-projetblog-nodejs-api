@@ -8,6 +8,7 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
+import commentRoutes from "./routes/comment.routes.js";
 import roleRoutes from "./routes/role.routes.js";
 
 import globalErrHandler from "./controllers/errorController.js";
@@ -75,6 +76,7 @@ app.get("/", async (req, res, next) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
 app.use("/api/roles", roleRoutes);
 
 // handle undefined Routes
