@@ -1,5 +1,6 @@
 import { Model } from "objection";
 import User from "./user.model.js";
+import Comment from "./Comment.js";
 
 class Post extends Model {
   static tableName = "posts";
@@ -12,6 +13,14 @@ class Post extends Model {
         join: {
           from: "posts.authorId",
           to: "users.id",
+        },
+      },
+      comments: {
+        relation: Model.HasManyRelation,
+        modelClass: Comment,
+        join: {
+          from: "posts.id",
+          to: "comments.postId",
         },
       },
     };

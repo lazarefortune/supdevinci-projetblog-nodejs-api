@@ -45,7 +45,9 @@ export const createOne = async (datas) => {
 
 export const findOneById = async (postId) => {
   try {
-    const post = await Post.query().withGraphFetched("author").findById(postId);
+    const post = await Post.query()
+      .withGraphFetched("[author]")
+      .findById(postId);
     if (!post) {
       throw new appError(404, "fail", "No Post found with that id");
     }
@@ -84,6 +86,18 @@ export const deleteOne = async (postId) => {
       throw new appError(404, "fail", "No post found with that id");
     }
     await post.$query().delete();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const findAllCommentsByPostId = async (postId) => {
+  try {
+    const post = await Post.query().findById(postId);
+    if (!post) {
+      throw new appError(404, "fail", "No post found with that id");
+    }
+    return post.$relatedQuery("comments");
   } catch (error) {
     throw error;
   }

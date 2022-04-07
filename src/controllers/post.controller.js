@@ -4,6 +4,7 @@ import {
   findAll,
   updateOneWithPatch,
   deleteOne,
+  findAllCommentsByPostId,
 } from "../services/post.service.js";
 
 import AppError from "../utils/appError.js";
@@ -95,6 +96,22 @@ export const deletePost = async (req, res, next) => {
       statusCode: 200,
       message: "Post deleted",
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllPostComments = async (req, res, next) => {
+  try {
+    const postId = req.params.id;
+
+    if (!postId || !Number(postId)) {
+      throw new AppError(404, "fail", "Missing post id");
+    }
+
+    const comments = await findAllCommentsByPostId(postId);
+
+    res.status(200).json(comments);
   } catch (error) {
     next(error);
   }
