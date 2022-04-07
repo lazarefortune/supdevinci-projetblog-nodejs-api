@@ -1,5 +1,5 @@
 import Post from "../db/models/Post.js";
-import User from "../db/models/User.js";
+import User from "../db/models/user.model.js";
 
 const postsRoutes = (app) => {
   /**
@@ -57,7 +57,6 @@ const postsRoutes = (app) => {
 
     const user = await User.query().findById(authorId);
 
-    console.log(user);
     if (!user) {
       res.status(404).send({ error: "Sorry, user not found !" });
 

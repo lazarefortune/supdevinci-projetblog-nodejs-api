@@ -1,5 +1,5 @@
 import { pbkdf2Sync, randomBytes } from "crypto";
-import config from "../../../config.js";
+import config from "../../config/config.js";
 
 const { keylen, pepper, iteration, digest } = config.security.password;
 

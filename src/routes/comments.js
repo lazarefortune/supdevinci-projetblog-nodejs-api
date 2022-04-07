@@ -1,5 +1,5 @@
 import Comment from "../db/models/Comment.js";
-import User from "../db/models/User.js";
+import User from "../db/models/user.model.js";
 import Post from "../db/models/Post.js";
 
 const commentsRoutes = (app) => {

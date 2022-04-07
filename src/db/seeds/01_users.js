@@ -1,6 +1,6 @@
 import faker from "faker";
 import hashPassword from "../../../src/security/password/hashPassword.js";
-import { getRandomNumberBetween } from "../../tools/utils.js";
+import { getRandomNumberBetween } from "../../utils/tools.js";
 
 const createFakeUser = () => {
   const [passwordHash, passwordSalt] = hashPassword(faker.internet.password());

@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import User from "./User.js";
+import User from "./user.model.js";
 
 class Post extends Model {
   static tableName = "posts";

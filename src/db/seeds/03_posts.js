@@ -1,5 +1,5 @@
 import faker from "faker";
-import { getRandomNumberBetween } from "../../tools/utils.js";
+import { getRandomNumberBetween } from "../../utils/tools.js";
 
 const createFakePost = () => {
   return {

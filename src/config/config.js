@@ -1,7 +1,14 @@
 import "dotenv/config";
 import * as yup from "yup";
 
+import securityConfig from "./security.config.js";
+import databaseConfig from "./database.config.js";
+
 const schema = yup.object().shape({
+  environment: yup
+    .string()
+    .oneOf(["production", "development", "test"])
+    .required(),
   port: yup.number().integer().positive().min(80).max(65535).required(),
   db: yup.object().shape({
     client: yup.string().oneOf(["mysql", "mysql2", "pg"]).required(),
@@ -38,53 +45,11 @@ const schema = yup.object().shape({
 
 const env = process.env;
 
-let connection = {};
-
-if (env.NODE_ENV == "development" || env.NODE_ENV == "production") {
-  connection = {
-    host: env.DB_HOST,
-    port: env.DB_PORT,
-    user: env.DB_USER,
-    password: env.DB_PASSWORD,
-    database: env.DB_NAME,
-  };
-}
-
-if (env == "test") {
-  connection = {
-    host: env.DB_HOST_TEST,
-    port: env.DB_PORT_TEST,
-    user: env.DB_USER_TEST,
-    password: env.DB_PASSWORD_TEST,
-    database: env.DB_NAME_TEST,
-  };
-}
-
 const data = {
   environment: env.NODE_ENV,
   port: env.APP_PORT,
-  db: {
-    client: env.DB_CLIENT,
-    connection,
-    migrations: {
-      directory: "./src/db/migrations/",
-    },
-    seeds: {
-      directory: "./src/db/seeds/",
-    },
-  },
-  security: {
-    password: {
-      pepper: env.SECURITY_PASSWORD_PEPPER,
-      iteration: 10000,
-      keylen: 512,
-      digest: "sha512",
-    },
-    session: {
-      secret: env.SECURITY_SESSION_SECRET,
-      expireAfter: "3 days",
-    },
-  },
+  db: databaseConfig,
+  security: securityConfig,
   webapp: {
     origin: env.WEBAPP_ORIGIN,
   },
