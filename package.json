@@ -1,6 +1,6 @@
 {
   "name": "node_backend",
-  "version": "1.0.3-0",
+  "version": "1.0.3-API without middleware.0",
   "description": "",
   "main": "./src/server.js",
   "type": "module",
