@@ -31,10 +31,10 @@ export const createOne = async (datas) => {
       throw new appError(409, "fail", "Post already exist");
     }
 
-    const post = await Post.query().findById(datas.authorId);
+    const user = await User.query().findById(datas.authorId);
 
-    if (!post) {
-      throw new appError(404, "fail", "No post found with that id");
+    if (!user) {
+      throw new appError(404, "fail", "No user found with that id");
     }
 
     return Post.query().insert(datas);
@@ -69,6 +69,14 @@ export const updateOneWithPatch = async (postId, datas) => {
 
       if (postExist && postExist.id !== Number(postId)) {
         throw new appError(409, "fail", "title already exist");
+      }
+    }
+
+    if (datas.authorId) {
+      const user = await User.query().findById(datas.authorId);
+
+      if (!user) {
+        throw new appError(404, "fail", "No user found with that id");
       }
     }
 
