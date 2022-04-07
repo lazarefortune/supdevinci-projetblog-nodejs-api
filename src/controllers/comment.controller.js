@@ -21,7 +21,7 @@ export const createComment = async (req, res, next) => {
   const { content, createdAt, updatedAt, authorId, postId } = req.body;
 
   try {
-    if (!content || !createdAt || !updatedAt || !authorId || !postId) {
+    if (!content || !authorId || !postId) {
       throw new AppError(400, "fail", "Missing required fields");
     }
 

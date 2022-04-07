@@ -8,10 +8,10 @@ export async function up(knex) {
     table.text("content").notNullable();
     table.datetime("createdAt").notNullable();
     table.datetime("updatedAt").notNullable();
-    table.integer("authorId").notNullable();
-    table.integer("postId").notNullable();
-    table.foreign("authorId").references("users");
-    table.foreign("postId").references("posts");
+    table.integer("authorId").notNullable().unsigned();
+    table.integer("postId").notNullable().unsigned();
+    table.foreign("authorId").references("users.id").onDelete("CASCADE");
+    table.foreign("postId").references("posts.id").onDelete("CASCADE");
   });
 }
 
