@@ -8,11 +8,12 @@ import {
   allUserPosts,
   allUserComments,
 } from "../controllers/user.controller.js";
+import auth from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
 router.get("/", getAllUsers);
-router.get("/:id", getUser);
+router.get("/:id", auth, getUser);
 router.put("/:id", updatedUser);
 router.patch("/:id", updatedUser);
 router.post("/", createUser);
