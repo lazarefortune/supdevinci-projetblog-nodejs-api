@@ -11,7 +11,7 @@ import postRoutes from "./routes/post.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
 import roleRoutes from "./routes/role.routes.js";
 
-import globalErrHandler from "./controllers/errorController.js";
+import globalErrHandler from "./controllers/error.controller.js";
 import AppError from "./utils/appError.js";
 
 const app = express();

@@ -2,13 +2,13 @@
 import config from "../config/config.js";
 export default (err, req, res, next) => {
   let errorDatas = {
-    name: err.name || "error",
+    status: err.name || "Error",
     statusCode: err.statusCode || 500,
     message: err.message || "Internal Server Error",
   };
 
   if (config.environment === "production" && errorDatas.statusCode === 500) {
-    errorDatas.name = "error";
+    errorDatas.status = "Error";
     errorDatas.message = "Internal Server Error";
   }
 

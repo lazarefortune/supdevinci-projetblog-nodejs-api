@@ -6,9 +6,11 @@ import {
   deleteOne,
   findAllPosts,
   findAllComments,
+  signIn,
+  updatePassword,
 } from "../services/user.service.js";
 
-import hashPassword from "../security/password/hashPassword.js";
+import { hashPassword } from "../security/password/password.js";
 
 import AppError from "../utils/appError.js";
 
@@ -16,6 +18,34 @@ export const getAllUsers = async (req, res, next) => {
   try {
     const users = await findAll(req.query);
     res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const signInUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // Vérifier le format de l'email
+    const emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!emailRegex.test(email)) {
+      throw new AppError(400, "fail", "Invalid email");
+    }
+
+    // Vérifier le mot de passe
+    if (password.length < 3) {
+      throw new AppError(400, "fail", "Password must be at least 3 characters");
+    }
+
+    const [user, token] = await signIn(email, password);
+
+    res.status(200).json({
+      status: "success",
+      token,
+      user,
+    });
   } catch (error) {
     next(error);
   }
@@ -33,15 +63,12 @@ export const createUser = async (req, res, next) => {
     roleId,
   } = req.body;
 
-  const [passwordHash, passwordSalt] = hashPassword(password);
-
   const datas = {
     firstName,
     lastName,
     displayName,
     email,
-    passwordHash,
-    passwordSalt,
+    password,
     createdAt: createdAt || new Date(),
     updatedAt: updatedAt || new Date(),
     roleId: roleId || 3,
@@ -71,13 +98,13 @@ export const getUser = async (req, res, next) => {
   }
 };
 
-export const updatedUser = async (req, res, next) => {
+export const updateUser = async (req, res, next) => {
   const {
     firstName,
     lastName,
     displayName,
     email,
-    password,
+    // password,
     updatedAt,
     roleId,
   } = req.body;
@@ -88,14 +115,8 @@ export const updatedUser = async (req, res, next) => {
     displayName,
     email,
     updatedAt: updatedAt || new Date(),
-    roleId: roleId || 3,
+    roleId: roleId,
   };
-
-  if (password) {
-    const [passwordHash, passwordSalt] = hashPassword(password);
-    datas.passwordHash = passwordHash;
-    datas.passwordSalt = passwordSalt;
-  }
 
   try {
     const userId = req.params.id;
@@ -111,6 +132,47 @@ export const updatedUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateUserPassword = async (req, res, next) => {
+  const {
+    params: { id: userId },
+    body: { oldPassword, newPassword },
+    session: { userId: sessionUserId },
+  } = req;
+
+  try {
+    if (Number(sessionUserId) !== Number(userId)) {
+      throw new AppError(
+        401,
+        "fail",
+        "You are not authorized to access this user"
+      );
+    }
+
+    if (!userId || !Number(userId)) {
+      throw new AppError(400, "fail", "Missing user id");
+    }
+
+    if (!oldPassword) {
+      throw new AppError(400, "fail", "Missing old password");
+    }
+
+    if (!newPassword) {
+      throw new AppError(400, "fail", "Missing new password");
+    }
+
+    await updatePassword(userId, oldPassword, newPassword);
+
+    res.status(200).json({
+      status: "success",
+      statusCode: 200,
+      message: "Password updated",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export const deleteUser = async (req, res, next) => {
   try {
