@@ -2,33 +2,33 @@ import jsonwebtoken from "jsonwebtoken";
 import config from "../config/config.js";
 
 const auth = (req, res, next) => {
-  const {
-    headers: { authentication: jwt },
-  } = req;
-  console.log(`JWT  = ${jwt}`);
-  try {
-    const { payload } = jsonwebtoken.verify(
-      jwt,
-      config.security.session.secret
-    );
+    const {
+      headers: { authentication: jwt },
+    } = req;
 
-    req.session = payload;
-    next();
-  } catch (err) {
-    if (err instanceof jsonwebtoken.TokenExpiredError) {
-      res.status(401).send("Token expired");
+    try {
+      const { payload } = jsonwebtoken.verify(
+        jwt,
+        config.security.session.secret
+      );
 
-      return;
+      req.session = payload;
+      next();
+    } catch (err) {
+      if (err instanceof jsonwebtoken.TokenExpiredError) {
+        res.status(401).send("Token expired");
+
+        return;
+      }
+
+      if (err instanceof jsonwebtoken.JsonWebTokenError) {
+        res.status(401).send("Invalid token");
+
+        return;
+      }
+
+      res.status(500).send("Internal server error");
     }
-
-    if (err instanceof jsonwebtoken.JsonWebTokenError) {
-      res.status(401).send("Invalid token");
-
-      return;
-    }
-
-    res.status(500).send("Internal server error");
-  }
 };
 
 export default auth;
