@@ -17,11 +17,11 @@ const auth = (req, res, next) => {
     next();
   } catch (err) {
     if (err instanceof jsonwebtoken.TokenExpiredError) {
-      throw new AppError(401, "fail", "Token expired");
+      throw new AppError(403, "fail", "Token expired");
     }
 
     if (err instanceof jsonwebtoken.JsonWebTokenError) {
-      throw new AppError(401, "fail", "Invalid token");
+      throw new AppError(403, "fail", "You need to sign in");
     }
 
     throw new AppError(500, "fail", "Internal server error");
