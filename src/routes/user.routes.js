@@ -12,6 +12,7 @@ import {
 } from "../controllers/user.controller.js";
 import auth from "../middlewares/auth.middleware.js";
 import ownUserAccess from "../middlewares/ownAccess.middleware.js";
+import authUser from "../middlewares/authUser.middleware.js";
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.delete("/:id", deleteUser);
 // Auth routes
 router.use([auth, ownUserAccess]);
 
-router.get("/:id", getUser);
+router.get("/:id", authUser(["admin", "user"]), getUser);
 router.put("/:id", updateUser);
 router.patch("/:id", updateUser);
 router.put("/:id/password/update", updateUserPassword);

@@ -11,6 +11,7 @@ export async function up(knex) {
     table.string("email").notNullable().unique();
     table.text("passwordHash").notNullable();
     table.text("passwordSalt").notNullable();
+    table.text("role").notNullable();
     table.datetime("createdAt").notNullable();
     table.datetime("updatedAt").notNullable();
   });

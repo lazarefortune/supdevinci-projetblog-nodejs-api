@@ -1,5 +1,4 @@
 import { Model } from "objection";
-import Role from "./role.model.js";
 import Post from "./post.model.js";
 import Comment from "./comment.model.js";
 
@@ -16,7 +15,7 @@ class User extends Model {
         "email",
         "passwordHash",
         "passwordSalt",
-        "roleId",
+        "role",
       ],
 
       properties: {
@@ -47,15 +46,6 @@ class User extends Model {
         join: {
           from: "users.id",
           to: "comments.authorId",
-        },
-      },
-      role: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Role,
-        filter: (query) => query.select("id", "name"),
-        join: {
-          from: "users.roleId",
-          to: "roles.id",
         },
       },
     };

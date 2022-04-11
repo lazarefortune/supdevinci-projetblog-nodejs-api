@@ -10,6 +10,8 @@ import {
   comparePassword,
 } from "../security/password/password.js";
 
+import { securityHelper } from "../utils/tools.js";
+
 export const findOneByField = async (field, value) => {
   const user = await User.query().findOne({ [field]: value });
   return user;
@@ -31,6 +33,18 @@ export const findAll = async (queryString) => {
 
 export const signIn = async (email, password) => {
   try {
+    if (!securityHelper.emailRegex.test(email)) {
+      throw new appError(400, "fail", "Invalid email format");
+    }
+
+    if (password.length < securityHelper.passwordLengthMin) {
+      throw new appError(
+        400,
+        "fail",
+        `Password must be at least ${securityHelper.passwordLengthMin} characters`
+      );
+    }
+
     const user = await findOneByField("email", email);
 
     if (!user) {
@@ -48,7 +62,11 @@ export const signIn = async (email, password) => {
     }
 
     const token = jsonwebtoken.sign(
-      { payload: { userId: user.id } },
+      {
+        payload: {
+          user: { id: user.id, role: user.role },
+        },
+      },
       config.security.session.secret,
       { expiresIn: config.security.session.expireAfter }
     );
@@ -59,22 +77,30 @@ export const signIn = async (email, password) => {
   }
 };
 
-export const createOne = async (datas) => {
+export const createOne = async (user) => {
   try {
-    const isUserExist = await findOneByField("email", datas.email);
-
-    if (isUserExist) {
-      throw new appError(409, "fail", "User already exist");
+    if (!securityHelper.emailRegex.test(user.email)) {
+      throw new appError(400, "fail", "Invalid email format");
     }
 
-    const [passwordHash, passwordSalt] = hashPassword(datas.password);
+    const isUserExist = await findOneByField("email", user.email);
 
-    datas.passwordHash = passwordHash;
-    datas.passwordSalt = passwordSalt;
+    if (isUserExist) {
+      throw new appError(409, "fail", "Email already exist");
+    }
 
-    delete datas.password;
+    if (!securityHelper.passwordRegex.test(user.password)) {
+      throw new appError(400, "fail", securityHelper.passwordError);
+    }
 
-    return User.query().insert(datas);
+    const [passwordHash, passwordSalt] = hashPassword(user.password);
+
+    user.passwordHash = passwordHash;
+    user.passwordSalt = passwordSalt;
+
+    delete user.password;
+
+    return User.query().insert(user);
   } catch (error) {
     throw error;
   }
@@ -92,23 +118,27 @@ export const findOneById = async (userId) => {
   }
 };
 
-export const updateOneWithPatch = async (userId, datas) => {
+export const updateOneWithPatch = async (userId, user) => {
   try {
-    const ifUserExist = await User.query().findById(userId);
-    if (!ifUserExist) {
+    const isUserExist = await User.query().findById(userId);
+    if (!isUserExist) {
       throw new appError(404, "fail", "No user found with that id");
     }
 
-    if (datas.email) {
-      const userWithSameEmail = await findOneByField("email", datas.email);
+    if (user.email) {
+      if (!securityHelper.emailRegex.test(user.email)) {
+        throw new appError(400, "fail", "Invalid email format");
+      }
+
+      const userWithSameEmail = await findOneByField("email", user.email);
 
       if (userWithSameEmail && userWithSameEmail.id !== Number(userId)) {
-        throw new appError(409, "fail", "email already exist");
+        throw new appError(409, "fail", "Email already exist");
       }
     }
 
-    const user = await User.query().patchAndFetchById(userId, datas);
-    return user;
+    const newUser = await User.query().patchAndFetchById(userId, user);
+    return newUser;
   } catch (error) {
     throw error;
   }
@@ -141,6 +171,10 @@ export const updatePassword = async (userId, oldPassword, newPassword) => {
 
     if (!isPasswordValid) {
       throw new appError(401, "fail", "Invalid old password");
+    }
+
+    if (!securityHelper.passwordRegex.test(newPassword)) {
+      throw new appError(400, "fail", securityHelper.passwordError);
     }
 
     const isPasswordSame = comparePassword(

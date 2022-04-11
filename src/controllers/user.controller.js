@@ -10,8 +10,6 @@ import {
   updatePassword,
 } from "../services/user.service.js";
 
-import { hashPassword } from "../security/password/password.js";
-
 import AppError from "../utils/appError.js";
 
 export const getAllUsers = async (req, res, next) => {
@@ -26,18 +24,6 @@ export const getAllUsers = async (req, res, next) => {
 export const signInUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    // Vérifier le format de l'email
-    const emailRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!emailRegex.test(email)) {
-      throw new AppError(400, "fail", "Invalid email");
-    }
-
-    // Vérifier le mot de passe
-    if (password.length < 3) {
-      throw new AppError(400, "fail", "Password must be at least 3 characters");
-    }
 
     const [user, token] = await signIn(email, password);
 
@@ -60,7 +46,7 @@ export const createUser = async (req, res, next) => {
     password,
     createdAt,
     updatedAt,
-    roleId,
+    role,
   } = req.body;
 
   const datas = {
@@ -71,7 +57,7 @@ export const createUser = async (req, res, next) => {
     password,
     createdAt: createdAt || new Date(),
     updatedAt: updatedAt || new Date(),
-    roleId: roleId || 3,
+    role: role || "reader",
   };
 
   try {
@@ -99,15 +85,7 @@ export const getUser = async (req, res, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  const {
-    firstName,
-    lastName,
-    displayName,
-    email,
-    // password,
-    updatedAt,
-    roleId,
-  } = req.body;
+  const { firstName, lastName, displayName, email, updatedAt } = req.body;
 
   const datas = {
     firstName,
@@ -115,7 +93,6 @@ export const updateUser = async (req, res, next) => {
     displayName,
     email,
     updatedAt: updatedAt || new Date(),
-    roleId: roleId,
   };
 
   try {
@@ -137,7 +114,9 @@ export const updateUserPassword = async (req, res, next) => {
   const {
     params: { id: userId },
     body: { oldPassword, newPassword },
-    session: { userId: sessionUserId },
+    session: {
+      user: { id: sessionUserId },
+    },
   } = req;
 
   try {

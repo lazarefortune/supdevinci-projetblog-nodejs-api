@@ -1,6 +1,6 @@
 import faker from "faker";
-import hashPassword from "../../../src/security/password/hashPassword.js";
-import { getRandomNumberBetween } from "../../utils/tools.js";
+import { hashPassword } from "../../security/password/password.js";
+import { getRandomRole } from "../../utils/tools.js";
 
 const createFakeUser = () => {
   const [passwordHash, passwordSalt] = hashPassword(faker.internet.password());
@@ -14,7 +14,7 @@ const createFakeUser = () => {
     passwordSalt: passwordSalt,
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
-    roleId: getRandomNumberBetween(1, 3),
+    role: getRandomRole(),
   };
 };
 
