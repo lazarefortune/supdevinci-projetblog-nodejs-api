@@ -10,6 +10,15 @@ import {
 
 import AppError from "../utils/appError.js";
 
+export const getAllPostsWithoutAuth = async (req, res, next) => {
+  try {
+    const posts = await findAll(req.query);
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getAllPostsAsAdmin = async (req, res, next) => {
   try {
     const {
