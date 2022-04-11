@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v2.1.0...v2.2.0) (2022-04-11)
+
+
+### Features
+
+* **routes:** add find all public posts without authentication ([59eb613](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/commit/59eb6131084e45e724630db9e11e16c10619597b))
+
 ## [2.1.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v2.0.1...v2.1.0) (2022-04-11)
 
 
