@@ -1,5 +1,5 @@
 import faker from "faker";
-import { hashPassword } from "../../security/password/password.js";
+import { hashPassword } from "../../security/password/index.js";
 import { getRandomRole } from "../../utils/tools.js";
 
 const createFakeUser = () => {

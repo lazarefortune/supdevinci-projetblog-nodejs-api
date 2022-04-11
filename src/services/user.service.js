@@ -5,10 +5,7 @@ import User from "../db/models/user.model.js";
 import APIFeatures from "../utils/apiFeatures.js";
 import appError from "../utils/appError.js";
 
-import {
-  hashPassword,
-  comparePassword,
-} from "../security/password/password.js";
+import { hashPassword, comparePassword } from "../security/password/index.js";
 
 import { securityHelper } from "../utils/tools.js";
 
