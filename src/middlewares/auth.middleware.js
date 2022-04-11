@@ -12,7 +12,7 @@ const auth = (req, res, next) => {
       jwt,
       config.security.session.secret
     );
-    // Check if user exist in database
+
     req.session = payload;
     next();
   } catch (err) {
