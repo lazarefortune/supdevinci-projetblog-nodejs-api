@@ -223,3 +223,46 @@ export const findAllComments = async (userId) => {
     throw error;
   }
 };
+
+
+export const checkSecurityAccessRessource = async (
+  action,
+  userId,
+  ressourceId = null
+) => {
+  try {
+    const user = await User.query().findById(userId);
+    if (!user) {
+      throw new appError(404, "fail", "No user found with that id");
+    }
+
+    const allowedActions = ["read", "update", "delete"];
+
+    if (!allowedActions.includes(action)) {
+      throw new appError(400, "fail", "Invalid action");
+    }
+
+    if (user.role === "admin") {
+      return true;
+    }
+
+    if (ressourceId) {
+      const ressource = await User.query().findById(ressourceId);
+      if (!ressource) {
+        throw new appError(404, "fail", "No ressource found with that id");
+      }
+
+      if (ressource.id === user.id) {
+        return true;
+      }
+    }
+
+    throw new appError(
+      401,
+      "fail",
+      `You are not authorized to ${action} a ressource`
+    );
+  } catch (error) {
+    throw error;
+  }
+};
