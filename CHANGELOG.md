@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v2.0.0...v2.0.1) (2022-04-11)
+
+
+### Bug Fixes
+
+* **services:** add check acces to ressource with user role and user id && check session payload id ([a548db2](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/commit/a548db229b0f04ea87ca1265ca79e5a592ce9dcb))
+
 ## [2.0.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v1.1.0...v2.0.0) (2022-04-11)
 
 
