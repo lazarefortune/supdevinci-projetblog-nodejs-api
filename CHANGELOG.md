@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v1.1.0...v2.0.0) (2022-04-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **app:** role become a string for user
+
+### Features
+
+* **app:** delete user role relation ([164fe16](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/commit/164fe168e0713b05ecffa294c469e8ff3225d1c5))
+
 ## [1.1.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v1.0.3-0...v1.1.0) (2022-04-10)
 
 
