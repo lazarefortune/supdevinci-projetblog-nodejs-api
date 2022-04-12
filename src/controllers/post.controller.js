@@ -56,7 +56,7 @@ export const getAllPosts = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const {
-      body: { title, content, isPublished, createdAt, updatedAt, authorId },
+      body: { title, content, isPublished, createdAt, updatedAt },
       session: {
         user: { id: currentUserId },
       },
@@ -70,7 +70,7 @@ export const createPost = async (req, res, next) => {
       isPublished,
       createdAt: createdAt || new Date(),
       updatedAt: updatedAt || new Date(),
-      authorId,
+      authorId: currentUserId,
     };
 
     const post = await createOne(datas);
