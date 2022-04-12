@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v2.2.0...v2.3.0) (2022-04-12)
+
+
+### Features
+
+* **services:** add check user role for crud comment ([e1aabfc](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/commit/e1aabfcdc674017f4db662837ed6d468b1e7c095))
+
+
+### Bug Fixes
+
+* **controller:** fix posts authorId, change to define it to current user id ([fb053de](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/commit/fb053de39fa76f6802fee90bc3e37a6596a06caa))
+
 ## [2.2.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v2.1.0...v2.2.0) (2022-04-11)
 
 
