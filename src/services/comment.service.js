@@ -42,7 +42,7 @@ export const createOne = async (datas) => {
 export const findOneById = async (commentId) => {
   try {
     const comment = await Comment.query()
-      .withGraphFetched("author")
+      .withGraphFetched("[author, post]")
       .findById(commentId);
     if (!comment) {
       throw new appError(404, "fail", "No Comment found with that id");
@@ -60,22 +60,6 @@ export const updateOneWithPatch = async (commentId, datas) => {
       throw new appError(404, "fail", "No comment found with that id");
     }
 
-    if (datas.authorId) {
-      const userMatch = await User.query().findById(datas.authorId);
-
-      if (!userMatch) {
-        throw new appError(404, "fail", "No user found with that id");
-      }
-    }
-
-    if (datas.postId) {
-      const postMatch = await Post.query().findById(datas.postId);
-
-      if (!postMatch) {
-        throw new appError(404, "fail", "No post found with that id");
-      }
-    }
-
     const comment = await Comment.query().patchAndFetchById(commentId, datas);
     return comment;
   } catch (error) {
@@ -90,6 +74,79 @@ export const deleteOne = async (commentId) => {
       throw new appError(404, "fail", "No comment found with that id");
     }
     await comment.$query().delete();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const checkSecurityAccessRessource = async (
+  action,
+  userId,
+  ressourceId = null
+) => {
+  try {
+    const user = await User.query().findById(userId);
+    if (!user) {
+      throw new appError(404, "fail", "No user found with that id");
+    }
+
+    const allowedActions = [
+      "readAllAsAdmin",
+      "readAll",
+      "readOne",
+      "create",
+      "update",
+      "delete",
+    ];
+
+    if (!allowedActions.includes(action)) {
+      throw new appError(400, "fail", "Invalid action");
+    }
+
+    if (user.role === "admin") {
+      return true;
+    }
+
+    if (action === "readAllAsAdmin") {
+      throw new appError(403, "fail", "You are not allowed to read all posts");
+    }
+
+    // Everyone can create a comment
+    if (action === "create") {
+      return true;
+    }
+
+    if (ressourceId) {
+      const ressourceComment = await Comment.query()
+        .withGraphFetched("[post, author]")
+        .findById(ressourceId);
+
+      if (!ressourceComment) {
+        throw new appError(404, "fail", "No ressource found with that id");
+      }
+
+      if (action == "readOne" && ressourceComment.post.isPublic === true) {
+        return true;
+      }
+
+      if (
+        ["update", "delete"].includes(action) &&
+        ressourceComment.authorId == user.id &&
+        ressourceComment.post.isPublic
+      ) {
+        return true;
+      }
+
+      if (action == "delete" && ressourceComment.post.authorId === user.id) {
+        return true;
+      }
+    }
+
+    throw new appError(
+      401,
+      "fail",
+      `You are not authorized to ${action} a ressource`
+    );
   } catch (error) {
     throw error;
   }
