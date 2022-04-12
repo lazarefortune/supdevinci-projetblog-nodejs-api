@@ -87,14 +87,6 @@ export const updateOneWithPatch = async (postId, datas) => {
       }
     }
 
-    if (datas.authorId) {
-      const user = await User.query().findById(datas.authorId);
-
-      if (!user) {
-        throw new appError(404, "fail", "No user found with that id");
-      }
-    }
-
     const post = await Post.query().patchAndFetchById(postId, datas);
     return post;
   } catch (error) {

@@ -106,7 +106,7 @@ export const getPost = async (req, res, next) => {
 export const updatedPost = async (req, res, next) => {
   try {
     const {
-      body: { title, content, isPublished, updatedAt, authorId },
+      body: { title, content, isPublished, updatedAt },
       params: { id: postId },
       session: {
         user: { id: currentUserId },
@@ -120,7 +120,6 @@ export const updatedPost = async (req, res, next) => {
       content,
       isPublished,
       updatedAt: updatedAt || new Date(),
-      authorId,
     };
 
     if (!postId || !Number(postId)) {
