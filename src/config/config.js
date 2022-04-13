@@ -51,7 +51,7 @@ const data = {
   db: databaseConfig,
   security: securityConfig,
   webapp: {
-    origin: env.WEBAPP_ORIGIN,
+    origin: env.WEB_APP_ORIGIN,
   },
 };
 
