@@ -34,6 +34,10 @@ export const signInUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      throw new AppError(400, "fail", "Email and password are required");
+    }
+
     const [user, token] = await signIn(email, password);
 
     res.status(200).json({
