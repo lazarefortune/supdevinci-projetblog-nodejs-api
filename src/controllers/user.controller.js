@@ -1,15 +1,4 @@
-import {
-  createOne,
-  findOneById,
-  findAll,
-  updateOneWithPatch,
-  deleteOne,
-  findAllPosts,
-  findAllComments,
-  signIn,
-  updatePassword,
-  checkSecurityAccessRessource,
-} from "../services/user.service.js";
+import * as userService from "../services/user.service.js";
 
 import AppError from "../utils/appError.js";
 
@@ -21,9 +10,9 @@ export const getAllUsers = async (req, res, next) => {
       },
     } = req;
 
-    await checkSecurityAccessRessource("read", currentUserId);
+    await userService.checkSecurityAccessRessource("read", currentUserId);
 
-    const users = await findAll(req.query);
+    const users = await userService.findAll(req.query);
     res.status(200).json(users);
   } catch (error) {
     next(error);
@@ -38,7 +27,7 @@ export const signInUser = async (req, res, next) => {
       throw new AppError(400, "fail", "Email and password are required");
     }
 
-    const [user, token] = await signIn(email, password);
+    const [user, token] = await userService.signIn(email, password);
 
     res.status(200).json({
       status: "success",
@@ -74,7 +63,7 @@ export const createUser = async (req, res, next) => {
   };
 
   try {
-    const user = await createOne(datas);
+    const user = await userService.createOne(datas);
     res.status(201).json(user);
   } catch (error) {
     next(error);
@@ -94,9 +83,13 @@ export const getUser = async (req, res, next) => {
       throw new AppError(404, "fail", "Missing user id");
     }
 
-    await checkSecurityAccessRessource("read", currentUserId, userId);
+    await userService.checkSecurityAccessRessource(
+      "read",
+      currentUserId,
+      userId
+    );
 
-    const user = await findOneById(userId);
+    const user = await userService.findOneById(userId);
 
     res.status(200).json(user);
   } catch (error) {
@@ -114,7 +107,11 @@ export const updateUser = async (req, res, next) => {
       },
     } = req;
 
-    await checkSecurityAccessRessource("update", currentUserId, userId);
+    await userService.checkSecurityAccessRessource(
+      "update",
+      currentUserId,
+      userId
+    );
 
     const datas = {
       firstName,
@@ -128,7 +125,7 @@ export const updateUser = async (req, res, next) => {
       throw new AppError(404, "fail", "Missing user id");
     }
 
-    const user = await updateOneWithPatch(userId, datas);
+    const user = await userService.updateOneWithPatch(userId, datas);
 
     res.status(200).json(user);
   } catch (error) {
@@ -150,7 +147,11 @@ export const updateUserPassword = async (req, res, next) => {
       throw new AppError(400, "fail", "Missing user id");
     }
 
-    await checkSecurityAccessRessource("update", currentUserId, userId);
+    await userService.checkSecurityAccessRessource(
+      "update",
+      currentUserId,
+      userId
+    );
 
     if (!oldPassword) {
       throw new AppError(400, "fail", "Missing old password");
@@ -160,7 +161,7 @@ export const updateUserPassword = async (req, res, next) => {
       throw new AppError(400, "fail", "Missing new password");
     }
 
-    await updatePassword(userId, oldPassword, newPassword);
+    await userService.updatePassword(userId, oldPassword, newPassword);
 
     res.status(200).json({
       status: "success",
@@ -181,13 +182,17 @@ export const deleteUser = async (req, res, next) => {
       },
     } = req;
 
-    await checkSecurityAccessRessource("delete", currentUserId, userId);
+    await userService.checkSecurityAccessRessource(
+      "delete",
+      currentUserId,
+      userId
+    );
 
     if (!userId || !Number(userId)) {
       throw new AppError(404, "fail", "Missing user id");
     }
 
-    await deleteOne(userId);
+    await userService.deleteOne(userId);
 
     res.status(200).send({
       status: "success",
@@ -207,7 +212,7 @@ export const allUserPosts = async (req, res, next) => {
       throw new AppError(404, "fail", "Missing user id");
     }
 
-    const posts = await findAllPosts(userId);
+    const posts = await userService.findAllPosts(userId);
 
     res.status(200).json(posts);
   } catch (error) {
@@ -223,7 +228,7 @@ export const allUserComments = async (req, res, next) => {
       throw new AppError(404, "fail", "Missing user id");
     }
 
-    const posts = await findAllComments(userId);
+    const posts = await userService.findAllComments(userId);
 
     res.status(200).json(posts);
   } catch (error) {
