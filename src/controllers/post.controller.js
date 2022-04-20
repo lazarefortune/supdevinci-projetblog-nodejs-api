@@ -6,6 +6,7 @@ import {
   deleteOne,
   findAllCommentsByPostId,
   checkSecurityAccessRessource,
+  findAllCommentsByPostIdWithoutAuth,
 } from "../services/post.service.js";
 
 import AppError from "../utils/appError.js";
@@ -75,6 +76,20 @@ export const createPost = async (req, res, next) => {
 
     const post = await createOne(datas);
     res.status(201).json(post);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPostWithoutAuth = async (req, res, next) => {
+  try {
+    const { id: postId } = req.params;
+
+    if (!postId || !Number(postId)) {
+      throw new AppError(404, "fail", "Missing post id");
+    }
+    const post = await findOneById(postId, false);
+    res.status(200).json(post);
   } catch (error) {
     next(error);
   }
@@ -177,6 +192,22 @@ export const getAllPostComments = async (req, res, next) => {
     }
 
     const comments = await findAllCommentsByPostId(postId);
+
+    res.status(200).json(comments);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllPostCommentsWithoutAuth = async (req, res, next) => {
+  try {
+    const { id: postId } = req.params;
+
+    if (!postId || !Number(postId)) {
+      throw new AppError(404, "fail", "Missing post id");
+    }
+
+    const comments = await findAllCommentsByPostIdWithoutAuth(postId);
 
     res.status(200).json(comments);
   } catch (error) {

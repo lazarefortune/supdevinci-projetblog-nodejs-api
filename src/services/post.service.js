@@ -13,13 +13,16 @@ export const findAll = async (queryString, findAsAdmin = false) => {
   try {
     let features = null;
     if (findAsAdmin) {
-      features = new APIFeatures(Post.query(), queryString)
+      features = new APIFeatures(
+        Post.query().withGraphFetched("author"),
+        queryString
+      )
         .limit()
         .sort()
         .paginate();
     } else {
       features = new APIFeatures(
-        Post.query().where("isPublished", 1),
+        Post.query().withGraphFetched("author").where("isPublished", 1),
         queryString
       )
         .limit()
@@ -58,11 +61,17 @@ export const createOne = async (datas) => {
   }
 };
 
-export const findOneById = async (postId) => {
+export const findOneById = async (postId, isUserAuthenticate = true) => {
   try {
-    const post = await Post.query()
-      .withGraphFetched("[author]")
-      .findById(postId);
+    let post = null;
+    if (isUserAuthenticate) {
+      post = await Post.query().withGraphFetched("[author]").findById(postId);
+    } else {
+      post = await Post.query()
+        .withGraphFetched("[author]")
+        .where("isPublished", 1)
+        .findById(postId);
+    }
     if (!post) {
       throw new appError(404, "fail", "No Post found with that id");
     }
@@ -113,6 +122,19 @@ export const findAllCommentsByPostId = async (postId) => {
       throw new appError(404, "fail", "No post found with that id");
     }
     return post.$relatedQuery("comments");
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const findAllCommentsByPostIdWithoutAuth = async (postId) => {
+  try {
+    let post = null;
+    post = await Post.query().where("isPublished", 1).findById(postId);
+    if (!post) {
+      throw new appError(404, "fail", "No post found with that id");
+    }
+    return post.$relatedQuery("comments").withGraphFetched("author");
   } catch (error) {
     throw error;
   }
