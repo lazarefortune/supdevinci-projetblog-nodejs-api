@@ -18,7 +18,7 @@ const PORT = config.port;
 
 app.listen(PORT, () => {
   console.log(`Environment: ${config.environment}`);
-  console.log(`Listening on port ${PORT}`);
+  console.log(`🎉 Listening on port ${PORT}`);
 });
 
 process.on("unhandledRejection", (err) => {
