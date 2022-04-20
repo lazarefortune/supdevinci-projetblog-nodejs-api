@@ -4,7 +4,7 @@ import { getRandomNumberBetween } from "../../utils/tools.js";
 const createFakePost = () => {
   return {
     title: faker.name.title(),
-    content: faker.lorem.paragraph(),
+    content: faker.lorem.paragraph(faker.datatype.number({ min: 20, max: 40 })),
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
     isPublished: faker.datatype.boolean(),
