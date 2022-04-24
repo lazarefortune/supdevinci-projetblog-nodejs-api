@@ -51,6 +51,10 @@ class User extends Model {
       },
     };
   }
+
+  get isAdmin() {
+    return this.role === "admin";
+  }
 }
 
 export default User;

@@ -164,7 +164,7 @@ export const checkSecurityAccessRessource = async (
       throw new appError(400, "fail", "Invalid action");
     }
 
-    if (user.role === "admin") {
+    if (user.isAdmin) {
       return true;
     }
 
