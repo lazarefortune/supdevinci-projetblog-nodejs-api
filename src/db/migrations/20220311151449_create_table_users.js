@@ -12,6 +12,7 @@ export async function up(knex) {
     table.text("passwordHash").notNullable();
     table.text("passwordSalt").notNullable();
     table.text("role").notNullable();
+    table.boolean("activated").notNullable().defaultTo(true);
     table.datetime("createdAt").notNullable();
     table.datetime("updatedAt").notNullable();
   });

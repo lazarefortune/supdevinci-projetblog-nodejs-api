@@ -58,6 +58,10 @@ export const signIn = async (email, password) => {
       throw new appError(401, "fail", "Invalid email or password");
     }
 
+    if (!user.isActive) {
+      throw new appError(401, "fail", "User is not active");
+    }
+
     const token = jsonwebtoken.sign(
       {
         payload: {
