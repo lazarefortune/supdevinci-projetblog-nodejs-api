@@ -172,6 +172,44 @@ export const updateUserPassword = async (req, res, next) => {
   }
 };
 
+export const updateUserAccountStatus = async (req, res, next) => {
+  try {
+    const {
+      params: { id: userId },
+      body: { status },
+      session: {
+        user: { id: currentUserId },
+      },
+    } = req;
+
+    if (!userId || !Number(userId)) {
+      throw new AppError(400, "fail", "Missing user id");
+    }
+
+    if (status === undefined) {
+      throw new AppError(400, "fail", "Missing status");
+    }
+
+    if (typeof status !== "boolean") {
+      throw new AppError(400, "fail", "Status must be a boolean");
+    }
+
+    await userService.checkSecurityAccessRessource(
+      "updateAccountStatus",
+      currentUserId,
+      userId
+    );
+
+    const user = await userService.updateAccountStatus(userId, status);
+
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 export const deleteUser = async (req, res, next) => {
   try {
     const {

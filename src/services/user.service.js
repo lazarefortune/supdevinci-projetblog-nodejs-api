@@ -199,6 +199,24 @@ export const updatePassword = async (userId, oldPassword, newPassword) => {
   }
 };
 
+export const updateAccountStatus = async (userId, isActive) => {
+  try {
+    const user = await User.query().findById(userId);
+
+    if (!user) {
+      throw new appError(404, "fail", "No user found with that id");
+    }
+
+    await user.$query().patch({
+      activated: isActive,
+    });
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Other methods
 
 export const findAllPosts = async (userId) => {
@@ -225,7 +243,6 @@ export const findAllComments = async (userId) => {
   }
 };
 
-
 export const checkSecurityAccessRessource = async (
   action,
   userId,
@@ -237,7 +254,7 @@ export const checkSecurityAccessRessource = async (
       throw new appError(404, "fail", "No user found with that id");
     }
 
-    const allowedActions = ["read", "update", "delete"];
+    const allowedActions = ["read", "update", "delete", "updateAccountStatus"];
 
     if (!allowedActions.includes(action)) {
       throw new appError(400, "fail", "Invalid action");
@@ -251,6 +268,10 @@ export const checkSecurityAccessRessource = async (
       const ressource = await User.query().findById(ressourceId);
       if (!ressource) {
         throw new appError(404, "fail", "No ressource found with that id");
+      }
+
+      if (action === "updateAccountStatus") {
+        throw new appError(403, "fail", "You can't update account status");
       }
 
       if (ressource.id === user.id) {

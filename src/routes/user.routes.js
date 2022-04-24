@@ -12,9 +12,15 @@ router.post("/register", userController.createUser);
 
 router.get("/", auth, userController.getAllUsers);
 router.get("/:id", auth, userController.getUser);
-router.put("/:id", auth, userController.updateUser);
+// router.put("/:id", auth, userController.updateUser);
 router.patch("/:id", auth, userController.updateUser);
 router.put("/:id/password/update", auth, userController.updateUserPassword);
+router.patch(
+  "/:id/account/status",
+  auth,
+  userController.updateUserAccountStatus
+);
+
 router.delete("/:id", auth, userController.deleteUser);
 
 // Other routes
