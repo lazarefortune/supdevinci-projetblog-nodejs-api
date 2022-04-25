@@ -219,13 +219,16 @@ export const updateAccountStatus = async (userId, isActive) => {
 
 // Other methods
 
-export const findAllPosts = async (userId) => {
+export const findAllPosts = async (userId, asAdmin = false) => {
   try {
     const user = await User.query().findById(userId);
     if (!user) {
       throw new appError(404, "fail", "No user found with that id");
     }
-    return user.$relatedQuery("posts");
+    if (asAdmin) {
+      return user.$relatedQuery("posts");
+    }
+    return user.$relatedQuery("posts").where("isPublished", 1);
   } catch (error) {
     throw error;
   }

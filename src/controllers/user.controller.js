@@ -257,6 +257,22 @@ export const allUserPosts = async (req, res, next) => {
   }
 };
 
+export const allUserPostsAsAdmin = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+
+    if (!userId || !Number(userId)) {
+      throw new AppError(404, "fail", "Missing user id");
+    }
+
+    const posts = await userService.findAllPosts(userId, true);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const allUserComments = async (req, res, next) => {
   try {
     const userId = req.params.id;
