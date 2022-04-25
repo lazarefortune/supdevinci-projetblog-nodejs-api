@@ -16,7 +16,7 @@ const schema = yup.object().shape({
       host: yup.string().required(),
       port: yup.number().integer().positive().min(80).max(65535).required(),
       user: yup.string().required(),
-      password: yup.string().required(),
+      password: yup.string(),
       database: yup.string().required(),
     }),
     migrations: yup.object().shape({
