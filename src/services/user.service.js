@@ -226,9 +226,12 @@ export const findAllPosts = async (userId, asAdmin = false) => {
       throw new appError(404, "fail", "No user found with that id");
     }
     if (asAdmin) {
-      return user.$relatedQuery("posts");
+      return user.$relatedQuery("posts").withGraphFetched("author");
     }
-    return user.$relatedQuery("posts").where("isPublished", 1);
+    return user
+      .$relatedQuery("posts")
+      .where("isPublished", 1)
+      .withGraphFetched("author");
   } catch (error) {
     throw error;
   }
@@ -246,47 +249,54 @@ export const findAllComments = async (userId) => {
   }
 };
 
-export const checkSecurityAccessRessource = async (
-  action,
-  userId,
-  ressourceId = null
-) => {
+const isGranted = (action, user, userTarget = null) => {
+  const allowedActions = [
+    "user:readAll",
+    "user:read",
+    "user:update",
+    "user:delete",
+    "user:create",
+    "user:updatePassword",
+    "user:updateAccountStatus",
+  ];
+
+  if (!allowedActions.includes(action)) {
+    return false;
+  }
+
+  if (user.role === "admin") {
+    return true;
+  }
+
+  if (action === "user:readAll" || action === "user:updateAccountStatus") {
+    return false;
+  }
+
+  if (userTarget !== null && userTarget.id === user.id) {
+    return true;
+  }
+
+  return false;
+};
+
+export const canAccessUser = async (action, userId, targetUserId = null) => {
   try {
     const user = await User.query().findById(userId);
     if (!user) {
       throw new appError(404, "fail", "No user found with that id");
     }
 
-    const allowedActions = ["read", "update", "delete", "updateAccountStatus"];
-
-    if (!allowedActions.includes(action)) {
-      throw new appError(400, "fail", "Invalid action");
-    }
-
-    if (user.isAdmin) {
-      return true;
-    }
-
-    if (ressourceId) {
-      const ressource = await User.query().findById(ressourceId);
-      if (!ressource) {
-        throw new appError(404, "fail", "No ressource found with that id");
-      }
-
-      if (action === "updateAccountStatus") {
-        throw new appError(403, "fail", "You can't update account status");
-      }
-
-      if (ressource.id === user.id) {
-        return true;
+    let userTarger = null;
+    if (targetUserId) {
+      userTarger = await User.query().findById(targetUserId);
+      if (!userTarger) {
+        throw new appError(404, "fail", "No user found with that id");
       }
     }
 
-    throw new appError(
-      401,
-      "fail",
-      `You are not authorized to ${action} a ressource`
-    );
+    if (!isGranted(action, user, userTarger)) {
+      throw new appError(403, "fail", `You don't have permission to ${action}`);
+    }
   } catch (error) {
     throw error;
   }

@@ -61,20 +61,16 @@ export const createOne = async (datas) => {
   }
 };
 
-export const findOneById = async (postId, isUserAuthenticate = true) => {
+export const findOneById = async (postId) => {
   try {
-    let post = null;
-    if (isUserAuthenticate) {
-      post = await Post.query().withGraphFetched("[author]").findById(postId);
-    } else {
-      post = await Post.query()
-        .withGraphFetched("[author]")
-        .where("isPublished", 1)
-        .findById(postId);
-    }
+    const post = await Post.query()
+      .withGraphFetched("[author]")
+      .findById(postId);
+
     if (!post) {
       throw new appError(404, "fail", "No Post found with that id");
     }
+
     return post;
   } catch (error) {
     throw error;
@@ -115,11 +111,14 @@ export const deleteOne = async (postId) => {
   }
 };
 
-export const findAllCommentsByPostId = async (postId) => {
+export const findAllCommentsByPostId = async (postId, asPublic = false) => {
   try {
     const post = await Post.query().findById(postId);
     if (!post) {
       throw new appError(404, "fail", "No post found with that id");
+    }
+    if (asPublic && !post.isPublic) {
+      throw new appError(403, "fail", "You are not authorized");
     }
     return post.$relatedQuery("comments");
   } catch (error) {
@@ -127,81 +126,98 @@ export const findAllCommentsByPostId = async (postId) => {
   }
 };
 
-export const findAllCommentsByPostIdWithoutAuth = async (postId) => {
-  try {
-    let post = null;
-    post = await Post.query().where("isPublished", 1).findById(postId);
-    if (!post) {
-      throw new appError(404, "fail", "No post found with that id");
-    }
-    return post.$relatedQuery("comments").withGraphFetched("author");
-  } catch (error) {
-    throw error;
+const isGranted = (action, user, post = null) => {
+  if (user.role === "admin") {
+    return true;
   }
+
+  let isAuthorized = false;
+
+  if (action === "readAllAsAdmin") {
+    return isAuthorized;
+  }
+
+  if (post === null && action !== "create") {
+    return isAuthorized;
+  }
+
+  switch (action) {
+    case "create":
+      const allowedRolesToCreate = ["author"];
+      if (allowedRolesToCreate.includes(user.role)) {
+        isAuthorized = true;
+      }
+      break;
+    case "readOne":
+      const allowedRolesToReadOne = ["author", "reader"];
+      if (
+        (post.isPublic && allowedRolesToReadOne.includes(user.role)) ||
+        (post.authorId === user.id && allowedRolesToReadOne.includes(user.role))
+      ) {
+        isAuthorized = true;
+      }
+      break;
+    case "update":
+      const allowedRolesToUpdate = ["author"];
+
+      if (
+        allowedRolesToUpdate.includes(user.role) &&
+        post.authorId === user.id
+      ) {
+        isAuthorized = true;
+      }
+      break;
+    case "delete":
+      const allowedRolesToDelete = ["author"];
+      if (
+        allowedRolesToDelete.includes(user.role) &&
+        post.authorId === user.id
+      ) {
+        isAuthorized = true;
+      }
+      break;
+    default:
+      break;
+  }
+  return isAuthorized;
 };
 
-export const checkSecurityAccessRessource = async (
-  action,
-  userId,
-  ressourceId = null
-) => {
+export const canAccessPost = async (action, userId, postId = null) => {
   try {
     const user = await User.query().findById(userId);
     if (!user) {
       throw new appError(404, "fail", "No user found with that id");
     }
 
-    const allowedActions = [
-      "readAllAsAdmin",
-      "readAll",
-      "readOne",
-      "create",
-      "update",
-      "delete",
-    ];
+    let post = null;
 
-    if (!allowedActions.includes(action)) {
-      throw new appError(400, "fail", "Invalid action");
-    }
-
-    if (user.isAdmin) {
-      return true;
-    }
-
-    if (action === "readAllAsAdmin") {
-      throw new appError(403, "fail", "You are not allowed to read all posts");
-    }
-
-    if (["readAll"].includes(action)) {
-      return true;
-    }
-
-    const allowRolesToCreatePost = ["author"];
-
-    if (action === "create" && allowRolesToCreatePost.includes(user.role)) {
-      return true;
-    }
-
-    if (ressourceId) {
-      const ressourcePost = await Post.query().findById(ressourceId);
-      if (!ressourcePost) {
-        throw new appError(404, "fail", "No ressource found with that id");
-      }
-
-      if (action == "readOne" && ressourcePost.isPublic === true) {
-        return true;
-      }
-
-      if (ressourcePost.authorId === user.id) {
-        return true;
+    if (postId) {
+      post = await Post.query().findById(postId);
+      if (!post) {
+        throw new appError(404, "fail", "No post found with that id");
       }
     }
 
-    throw new appError(
-      401,
-      "fail",
-      `You are not authorized to ${action} a ressource`
-    );
+    if (!isGranted(action, user, post)) {
+      throw new appError(
+        403,
+        "fail",
+        `You are not authorized to ${action} post`
+      );
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const searchPosts = async (queryString) => {
+  try {
+    // Rechercher des posts par title
+    const posts = await Post.query()
+      .where("title", "like", `%${queryString}%`)
+      .andWhere("isPublished", 1);
+
+    return posts;
   } catch (error) {
     throw error;
   }

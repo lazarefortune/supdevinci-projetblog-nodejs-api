@@ -79,74 +79,73 @@ export const deleteOne = async (commentId) => {
   }
 };
 
-export const checkSecurityAccessRessource = async (
-  action,
-  userId,
-  ressourceId = null
-) => {
+// TODO: Dirty code - Help me !! - I need Refactor
+const isGranted = async (action, user, comment = null) => {
+  const allowedActions = [
+    "comment:readAll",
+    "comment:readAllOfOnePost",
+    "comment:read",
+    "comment:update",
+    "comment:delete",
+  ];
+
+  if (!allowedActions.includes(action)) {
+    return false;
+  }
+
+  if (user.role === "admin") {
+    return true;
+  }
+
+  if (action === "comment:readAll" && comment !== null) {
+    return false;
+  }
+
+  if (comment === null) {
+    return false;
+  }
+
+  if (action === "comment:readAllOfOnePost") {
+    if (comment.post.isPublic === true || comment.post.authorId === user.id) {
+      return true;
+    }
+    return false;
+  }
+
+  if (comment.post.isPublic === true && comment.authorId === user.id) {
+    return true;
+  }
+
+  if (comment.post.authorId === user.id) {
+    return true;
+  }
+
+  return false;
+};
+
+export const canAccessComment = async (action, userId, targetCommentId) => {
   try {
     const user = await User.query().findById(userId);
     if (!user) {
       throw new appError(404, "fail", "No user found with that id");
     }
 
-    const allowedActions = [
-      "readAllAsAdmin",
-      "readAll",
-      "readOne",
-      "create",
-      "update",
-      "delete",
-    ];
-
-    if (!allowedActions.includes(action)) {
-      throw new appError(400, "fail", "Invalid action");
-    }
-
-    if (user.isAdmin) {
-      return true;
-    }
-
-    if (action === "readAllAsAdmin") {
-      throw new appError(403, "fail", "You are not allowed to read all posts");
-    }
-
-    // Everyone can create a comment
-    if (action === "create") {
-      return true;
-    }
-
-    if (ressourceId) {
-      const ressourceComment = await Comment.query()
+    let comment = null;
+    if (targetCommentId) {
+      comment = await Comment.query()
         .withGraphFetched("[post, author]")
-        .findById(ressourceId);
+        .findById(targetCommentId);
 
-      if (!ressourceComment) {
-        throw new appError(404, "fail", "No ressource found with that id");
-      }
-
-      if (action == "readOne" && ressourceComment.post.isPublic === true) {
-        return true;
-      }
-
-      if (
-        ["update", "delete"].includes(action) &&
-        ressourceComment.authorId == user.id &&
-        ressourceComment.post.isPublic
-      ) {
-        return true;
-      }
-
-      if (action == "delete" && ressourceComment.post.authorId === user.id) {
-        return true;
+      if (!comment) {
+        throw new appError(404, "fail", "No comment found with that id");
       }
     }
 
-    throw new appError(
-      401,
-      "fail",
-      `You are not authorized to ${action} a ressource`
-    );
+    if (!(await isGranted(action, user, comment))) {
+      throw new appError(403, "fail", `You are not allowed to ${action}`);
+    }
+
+    return true;
   } catch (error) {
     throw error;
   }

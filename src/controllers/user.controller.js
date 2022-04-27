@@ -1,4 +1,5 @@
 import * as userService from "../services/user.service.js";
+import * as postService from "../services/post.service.js";
 
 import AppError from "../utils/appError.js";
 
@@ -10,7 +11,7 @@ export const getAllUsers = async (req, res, next) => {
       },
     } = req;
 
-    await userService.checkSecurityAccessRessource("read", currentUserId);
+    await userService.canAccessUser("user:readAll", currentUserId);
 
     const users = await userService.findAll(req.query);
     res.status(200).json(users);
@@ -82,11 +83,7 @@ export const getUser = async (req, res, next) => {
       throw new AppError(404, "fail", "Missing user id");
     }
 
-    await userService.checkSecurityAccessRessource(
-      "read",
-      currentUserId,
-      userId
-    );
+    await userService.canAccessUser("user:read", currentUserId, userId);
 
     const user = await userService.findOneById(userId);
 
@@ -106,11 +103,7 @@ export const updateUser = async (req, res, next) => {
       },
     } = req;
 
-    await userService.checkSecurityAccessRessource(
-      "update",
-      currentUserId,
-      userId
-    );
+    await userService.canAccessUser("user:update", currentUserId, userId);
 
     const datas = {
       firstName,
@@ -146,8 +139,8 @@ export const updateUserPassword = async (req, res, next) => {
       throw new AppError(400, "fail", "Missing user id");
     }
 
-    await userService.checkSecurityAccessRessource(
-      "update",
+    await userService.canAccessUser(
+      "user:updatePassword",
       currentUserId,
       userId
     );
@@ -186,6 +179,12 @@ export const updateUserAccountStatus = async (req, res, next) => {
       throw new AppError(400, "fail", "Missing user id");
     }
 
+    await userService.canAccessUser(
+      "user:updateAccountStatus",
+      currentUserId,
+      userId
+    );
+
     if (status === undefined) {
       throw new AppError(400, "fail", "Missing status");
     }
@@ -194,12 +193,6 @@ export const updateUserAccountStatus = async (req, res, next) => {
       throw new AppError(400, "fail", "Status must be a boolean");
     }
 
-    await userService.checkSecurityAccessRessource(
-      "updateAccountStatus",
-      currentUserId,
-      userId
-    );
-
     const user = await userService.updateAccountStatus(userId, status);
 
     res.status(200).json(user);
@@ -207,8 +200,6 @@ export const updateUserAccountStatus = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 export const deleteUser = async (req, res, next) => {
   try {
@@ -219,11 +210,7 @@ export const deleteUser = async (req, res, next) => {
       },
     } = req;
 
-    await userService.checkSecurityAccessRessource(
-      "delete",
-      currentUserId,
-      userId
-    );
+    await userService.canAccessUser("user:delete", currentUserId, userId);
 
     if (!userId || !Number(userId)) {
       throw new AppError(404, "fail", "Missing user id");
@@ -259,11 +246,18 @@ export const allUserPosts = async (req, res, next) => {
 
 export const allUserPostsAsAdmin = async (req, res, next) => {
   try {
-    const userId = req.params.id;
+    const {
+      params: { id: userId },
+      session: {
+        user: { id: currentUserId },
+      },
+    } = req;
 
     if (!userId || !Number(userId)) {
       throw new AppError(404, "fail", "Missing user id");
     }
+
+    await postService.canAccessPost("readAllAsAdmin", currentUserId);
 
     const posts = await userService.findAllPosts(userId, true);
 
@@ -275,11 +269,19 @@ export const allUserPostsAsAdmin = async (req, res, next) => {
 
 export const allUserComments = async (req, res, next) => {
   try {
-    const userId = req.params.id;
+    const {
+      params: { id: userId },
+      session: {
+        user: { id: currentUserId },
+      },
+    } = req;
 
     if (!userId || !Number(userId)) {
       throw new AppError(404, "fail", "Missing user id");
     }
+
+    // TODO: Use canAccessComment instead of canAccessPost
+    await postService.canAccessPost("readAllAsAdmin", currentUserId);
 
     const posts = await userService.findAllComments(userId);
 

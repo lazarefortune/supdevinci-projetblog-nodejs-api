@@ -1,11 +1,4 @@
-import {
-  createOne,
-  findOneById,
-  findAll,
-  updateOneWithPatch,
-  deleteOne,
-  checkSecurityAccessRessource,
-} from "../services/comment.service.js";
+import * as commentService from "../services/comment.service.js";
 
 import AppError from "../utils/appError.js";
 
@@ -17,9 +10,9 @@ export const getAllComments = async (req, res, next) => {
       },
     } = req;
 
-    await checkSecurityAccessRessource("readAllAsAdmin", authorId);
+    await commentService.canAccessComment("comment:readAll", authorId);
 
-    const comments = await findAll(req.query);
+    const comments = await commentService.findAll(req.query);
     res.status(200).json(comments);
   } catch (error) {
     next(error);
@@ -39,8 +32,6 @@ export const createComment = async (req, res, next) => {
       throw new AppError(400, "fail", "Missing required fields");
     }
 
-    await checkSecurityAccessRessource("create", authorId);
-
     const datas = {
       content,
       createdAt: createdAt || new Date(),
@@ -49,7 +40,7 @@ export const createComment = async (req, res, next) => {
       postId,
     };
 
-    const comment = await createOne(datas);
+    const comment = await commentService.createOne(datas);
     res.status(201).json(comment);
   } catch (error) {
     next(error);
@@ -69,9 +60,13 @@ export const getComment = async (req, res, next) => {
       throw new AppError(400, "fail", "Missing comment id");
     }
 
-    await checkSecurityAccessRessource("readOne", currentUserId, commentId);
+    await commentService.canAccessComment(
+      "comment:read",
+      currentUserId,
+      commentId
+    );
 
-    const comment = await findOneById(commentId);
+    const comment = await commentService.findOneById(commentId);
 
     res.status(200).json(comment);
   } catch (error) {
@@ -89,7 +84,11 @@ export const updatedComment = async (req, res, next) => {
       },
     } = req;
 
-    await checkSecurityAccessRessource("update", currentUserId, commentId);
+    await commentService.canAccessComment(
+      "comment:update",
+      currentUserId,
+      commentId
+    );
 
     const datas = {
       content,
@@ -100,7 +99,10 @@ export const updatedComment = async (req, res, next) => {
       throw new AppError(400, "fail", "Missing comment id");
     }
 
-    const comment = await updateOneWithPatch(Number(commentId), datas);
+    const comment = await commentService.updateOneWithPatch(
+      Number(commentId),
+      datas
+    );
 
     res.status(200).json(comment);
   } catch (error) {
@@ -121,9 +123,13 @@ export const deleteComment = async (req, res, next) => {
       throw new AppError(404, "fail", "Missing comment id");
     }
 
-    await checkSecurityAccessRessource("delete", currentUserId, commentId);
+    await commentService.canAccessComment(
+      "comment:delete",
+      currentUserId,
+      commentId
+    );
 
-    await deleteOne(commentId);
+    await commentService.deleteOne(commentId);
 
     res.status(200).send({
       status: "success",

@@ -10,7 +10,8 @@ class Comment extends Model {
       post: {
         relation: Model.BelongsToOneRelation,
         modelClass: Post,
-        filter: (query) => query.select("id", "title"),
+        filter: (query) =>
+          query.select("id", "title", "isPublished", "authorId"),
         join: {
           from: "comments.postId",
           to: "posts.id",

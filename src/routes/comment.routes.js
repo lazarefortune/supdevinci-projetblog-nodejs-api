@@ -1,11 +1,5 @@
 import express from "express";
-import {
-  getAllComments,
-  getComment,
-  createComment,
-  deleteComment,
-  updatedComment,
-} from "../controllers/comment.controller.js";
+import * as commentController from "../controllers/comment.controller.js";
 
 import auth from "../middlewares/auth.middleware.js";
 
@@ -13,14 +7,14 @@ const router = express.Router();
 
 router.use(auth);
 
-router.get("/", getAllComments);
-router.get("/:id", getComment);
+router.get("/", commentController.getAllComments);
+router.get("/:id", commentController.getComment);
 
-router.put("/:id", updatedComment);
-router.patch("/:id", updatedComment);
+router.put("/:id", commentController.updatedComment);
+router.patch("/:id", commentController.updatedComment);
 
-router.post("/", createComment);
+router.post("/", commentController.createComment);
 
-router.delete("/:id", deleteComment);
+router.delete("/:id", commentController.deleteComment);
 
 export default router;
