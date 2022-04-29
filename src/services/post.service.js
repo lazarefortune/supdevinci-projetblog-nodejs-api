@@ -120,7 +120,7 @@ export const findAllCommentsByPostId = async (postId, asPublic = false) => {
     if (asPublic && !post.isPublic) {
       throw new appError(403, "fail", "You are not authorized");
     }
-    return post.$relatedQuery("comments");
+    return post.$relatedQuery("comments").withGraphFetched("author");
   } catch (error) {
     throw error;
   }
