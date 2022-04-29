@@ -39,7 +39,7 @@ const schema = yup.object().shape({
     }),
   }),
   webapp: yup.object().shape({
-    origin: yup.string().required(),
+    origin: yup.array().of(yup.string()).required(),
   }),
 });
 
@@ -51,7 +51,7 @@ const data = {
   db: databaseConfig,
   security: securityConfig,
   webapp: {
-    origin: env.WEB_APP_ORIGIN,
+    origin: env.WEB_APP_ALLOWED_ORIGINS,
   },
 };
 

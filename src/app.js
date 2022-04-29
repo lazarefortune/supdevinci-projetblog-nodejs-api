@@ -13,12 +13,12 @@ import commentRoutes from "./routes/comment.routes.js";
 import globalErrHandler from "./controllers/error.controller.js";
 import AppError from "./utils/appError.js";
 
+import config from "./config/config.js";
+
 const app = express();
 
 // Allow Cross-Origin requests
-app.use(cors());
-// To specify origin
-// app.use(cors({ origin: config.webapp.origin }));
+app.use(cors({ origin: config.webapp.origin }));
 
 // Set security HTTP headers
 app.use(helmet());
