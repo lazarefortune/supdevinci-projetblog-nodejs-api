@@ -59,6 +59,13 @@ class User extends Model {
   get isActive() {
     return this.activated;
   }
+
+  $formatJson(json) {
+    json = super.$formatJson(json);
+    delete json.passwordHash;
+    delete json.passwordSalt;
+    return json;
+  }
 }
 
 export default User;
