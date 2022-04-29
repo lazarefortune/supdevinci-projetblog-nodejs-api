@@ -59,7 +59,11 @@ export const signIn = async (email, password) => {
     }
 
     if (!user.isActive) {
-      throw new appError(401, "fail", "User is not active");
+      throw new appError(
+        401,
+        "fail",
+        "Your account is not active, please contact the administrator"
+      );
     }
 
     const token = jsonwebtoken.sign(
