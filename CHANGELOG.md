@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.4.0...v2.5.0) (2022-05-01)
+
+
+### Features
+
+* **app:** allow multiple cors origin ([b20538a](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/b20538a9a9acb3129f30b9559217710061d310ac))
+* **app:** remove status and statusCode in response to client ([887561f](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/887561f9153a59d6335c6321e80bddcfc950e83d))
+* **routes:** add find all user posts as Admin ([feaafea](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/feaafea93b3af2d0e8a69c43a4243282206506d8))
+
+
+### Bug Fixes
+
+* **app:** custom error rateLimit ([78742df](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/78742dfe63b1503fb23cd76bdb766a39cc8af188))
+* **controller:** add user informations in response when user sign in ([5dfb0ad](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/5dfb0ada28f764d2f4002d18d75a6ce3db9a1df6))
+* **controller:** custom error message when creating comment ([337355c](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/337355c9a2b1a79e3f5f0c6995c226d8fcb05550))
+* **controller:** error statusCode fix ([fb07370](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/fb073700bdec3ddb8686cdefaa625ea557c411d1))
+* **model:** sanitize user model when returning to client, remove passwordHash and passwordSalt ([a3c06b7](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/a3c06b7bf8dc33144ce53bc1df7287f393cc96ad))
+* **services:** add related author and post when fetch comment ([5a5d20e](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/5a5d20e67e59b62a81021cc1c046c02a2009a952))
+* **services:** add related author when returning all post comments ([1965ef5](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/1965ef53e6444ef79aa3ea1021860c7d7308a51b))
+
 ## [2.4.0](https://github.com/lazarefortune/SupDeVinci_Projet_Blog_Backend/compare/v2.3.0...v2.4.0) (2022-04-25)
 
 
