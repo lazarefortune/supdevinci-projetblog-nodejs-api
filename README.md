@@ -84,5 +84,3 @@ Si vous souhaitez contribuer à l'application, vous pouvez faire un fork sur [Gi
 ***
 
 💬 💭 Si vous avez des questions, vous pouvez les poser sur le [Github Issue](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/issues) ou par mail à <lazarefortune@gmail.com>.
-
-`;
