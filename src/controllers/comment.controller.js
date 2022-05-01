@@ -28,8 +28,16 @@ export const createComment = async (req, res, next) => {
       },
     } = req;
 
-    if (!content || !authorId || !postId) {
-      throw new AppError(400, "fail", "Missing required fields");
+    if (!postId) {
+      throw new AppError(400, "fail", "Missing postId");
+    }
+
+    if (!authorId) {
+      throw new AppError(400, "fail", "Missing authorId");
+    }
+
+    if (!content) {
+      throw new AppError(400, "fail", "Missing comment content");
     }
 
     const datas = {
@@ -97,6 +105,10 @@ export const updatedComment = async (req, res, next) => {
 
     if (!commentId || !Number(commentId)) {
       throw new AppError(400, "fail", "Missing comment id");
+    }
+
+    if (!content) {
+      throw new AppError(400, "fail", "Missing comment content");
     }
 
     const comment = await commentService.updateOneWithPatch(
