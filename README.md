@@ -7,7 +7,7 @@
 4. [Collaboration](#collaboration)
 5. [FAQs](#faqs)
 
-## ❕ General Info
+## General Info 
 ***
 Le but de ce projet est de créer une mini plateforme de blog en Node JS.
 
@@ -20,13 +20,14 @@ Le projet se décompose en deux parties:
 Le backend est donc une API REST qui permet de gérer les données de notre blog.
 
 
-## 🚫 Prérequis
+## Prérequis 
 ***
 
 Vous devez avoir [Node JS](https://nodejs.org/en/) sur votre machine.
 
-## 🆙 Installation
+## Installation 
 ***
+📦 Il vous faut installer l'ensemble des dépendances avec `npm` avec la commande suivante :
 
 ```bash
 npm install
