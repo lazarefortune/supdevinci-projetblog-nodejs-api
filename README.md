@@ -2,7 +2,6 @@
 
 ## Table of Contents
 1. [General Info](#general-info)
-<!-- 2. [Prérequis](#Prérequis) -->
 2. [Prérequis](#prérequis)
 3. [Installation](#installation)
 4. [Collaboration](#collaboration)
