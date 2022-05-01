@@ -2,6 +2,7 @@
 import config from "../config/config.js";
 export default (err, req, res, next) => {
   let errorDatas = {
+    statusCode: err.statusCode || 500,
     message: err.message || "Something went wrong",
   };
 
@@ -15,7 +16,7 @@ export default (err, req, res, next) => {
   }
 
   // TODO:remove this
-  
+
   // let errorDatas = {
   //   status: err.name || "Error",
   //   statusCode: err.statusCode || 500,
@@ -31,5 +32,5 @@ export default (err, req, res, next) => {
   //   // If we're in development, we want to print the stack trace and other informations
   //   errorDatas = { ...errorDatas, stack: err.stack };
   // }
-  res.status(err.statusCode).json(errorDatas);
+  res.status(errorDatas.statusCode).json(errorDatas);
 };;
