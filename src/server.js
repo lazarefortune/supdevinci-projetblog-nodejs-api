@@ -13,6 +13,12 @@ process.on("uncaughtException", (err) => {
 const db = knex(config.db);
 Model.knex(db);
 
+// db.select()
+//   .from("knex_migrations")
+//   .then(() => {
+//     console.log("Connection to database success 👍");
+//   });
+
 // Start the server
 const PORT = config.port;
 
@@ -28,3 +34,5 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
+
+export default app;

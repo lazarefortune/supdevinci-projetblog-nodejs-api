@@ -4,6 +4,10 @@ const env = process.env;
 
 let dbConfig = {};
 
+if (!["production", "development", "test"].includes(env.NODE_ENV)) {
+  throw new Error("Invalid NODE_ENV");
+}
+
 if (env.NODE_ENV == "production") {
   dbConfig = {
     client: env.DB_CLIENT,
@@ -29,8 +33,7 @@ if (env.NODE_ENV == "development") {
     },
   };
 }
-
-if (env == "test") {
+if (env.NODE_ENV == "test") {
   dbConfig = {
     client: env.DB_CLIENT_TEST,
     connection: {

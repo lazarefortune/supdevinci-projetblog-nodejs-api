@@ -5,13 +5,13 @@
   "main": "./src/server.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon ./src/server.js",
-    "dev": "nodemon ./src/server.js",
+    "start": "cross-env NODE_ENV=production nodemon ./src/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./src/server.js",
     "knex": "knex",
     "migrate:reset": "npx knex migrate:rollback && npx knex migrate:latest",
     "migrate:seed": "npx knex seed:run",
     "database:migrate:seed": "npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run",
-    "test": "jest",
+    "test": "cross-env NODE_ENV=test npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run && mocha tests/**/*.js",
     "prepare": "husky install",
     "release": "standard-version"
   },
@@ -23,7 +23,6 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-rate-limit": "^6.3.0",
-    "formik": "^2.2.9",
     "helmet": "^5.0.2",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
@@ -39,10 +38,12 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
     "cross-env": "^7.0.3",
     "faker": "^5.5.3",
     "husky": "^7.0.4",
-    "jest": "^27.5.1",
+    "mocha": "^10.0.0",
     "standard-version": "^9.3.2",
     "supertest": "^6.2.2"
   }
