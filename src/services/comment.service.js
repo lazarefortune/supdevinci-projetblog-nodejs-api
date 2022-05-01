@@ -60,7 +60,9 @@ export const updateOneWithPatch = async (commentId, datas) => {
       throw new appError(404, "fail", "No comment found with that id");
     }
 
-    const comment = await Comment.query().patchAndFetchById(commentId, datas);
+    const comment = await Comment.query()
+      .patchAndFetchById(commentId, datas)
+      .withGraphFetched("[author, post]");
     return comment;
   } catch (error) {
     throw error;
