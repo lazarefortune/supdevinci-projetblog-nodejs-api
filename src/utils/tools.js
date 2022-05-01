@@ -19,3 +19,14 @@ export const securityHelper = {
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{3,}$/,
   passwordError: `Password must be at least 3 characters and must contain at least one lowercase letter, one uppercase letter, one number and one special character`,
 };
+
+
+export const checkRequiredFields = (object, requiredFields) => {
+  const missingFields = [];
+  requiredFields.forEach((field) => {
+    if (!object[field]) {
+      missingFields.push(field);
+    }
+  });
+  return missingFields;
+};

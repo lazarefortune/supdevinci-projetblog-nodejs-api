@@ -22,10 +22,6 @@ class APIFeatures {
       const sortBy = sort[0];
       const sortOrder = sort[1] || "asc";
       this.query = this.query.orderBy(sortBy, sortOrder);
-
-      // const sortBy = this.queryString.sort.split(",").join(" ");
-      // const orderType = this.queryString.sort.split(":").join(" ") || "desc";
-      // this.query = this.query.orderBy(sortBy);
     }
 
     return this;

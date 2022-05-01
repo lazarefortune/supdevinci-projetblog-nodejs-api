@@ -7,11 +7,11 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production nodemon ./src/server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./src/server.js",
-    "knex": "knex",
-    "migrate:reset": "npx knex migrate:rollback && npx knex migrate:latest",
-    "migrate:seed": "npx knex seed:run",
-    "database:migrate:seed": "npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run",
     "test": "cross-env NODE_ENV=test npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run && mocha tests/**/*.js",
+    "knex": "knex",
+    "seed": "npx knex seed:run",
+    "rollback:latest:seed": "npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run",
+    "rollback:latest": "npx knex migrate:rollback && npx knex migrate:latest",
     "prepare": "husky install",
     "release": "standard-version"
   },
@@ -44,7 +44,6 @@
     "faker": "^5.5.3",
     "husky": "^7.0.4",
     "mocha": "^10.0.0",
-    "standard-version": "^9.3.2",
-    "supertest": "^6.2.2"
+    "standard-version": "^9.3.2"
   }
 }

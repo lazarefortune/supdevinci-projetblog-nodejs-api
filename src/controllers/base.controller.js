@@ -1,3 +1,7 @@
+/*
+ * This part of code can be used to create a base controller for all controllers
+ */
+
 import APIFeatures from "../utils/apiFeatures.js";
 import appError from "../utils/appError.js";
 
@@ -17,23 +21,6 @@ export const getAll = (Model) => async (req, res, next) => {
 };
 
 export const getOne = (Model) => async (req, res, next) => {
-  try {
-    const doc = await Model.query().findById(req.params.id);
-    if (!doc) {
-      return res.status(404).json({
-        status: "fail",
-        statusCode: 404,
-        message: "No document found with that id",
-      });
-    }
-
-    res.status(200).json(doc);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getOne2 = (Model) => async (req, res, next) => {
   const elementId = req.params.id;
 
   if (!elementId || !Number(elementId)) {

@@ -2,6 +2,7 @@ import * as userService from "../services/user.service.js";
 import * as postService from "../services/post.service.js";
 
 import AppError from "../utils/appError.js";
+import { checkRequiredFields } from "../utils/tools.js";
 
 export const getAllUsers = async (req, res, next) => {
   try {
@@ -24,8 +25,17 @@ export const signInUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      throw new AppError(400, "fail", "Email and password are required");
+    const missingFields = checkRequiredFields({ email, password }, [
+      "email",
+      "password",
+    ]);
+
+    if (missingFields.length > 0) {
+      throw new AppError(
+        400,
+        "fail",
+        `${missingFields.join(", ")} are required`
+      );
     }
 
     const [user, token] = await userService.signIn(email, password);
@@ -49,7 +59,6 @@ export const createUser = async (req, res, next) => {
     password,
     createdAt,
     updatedAt,
-    role,
   } = req.body;
 
   const datas = {
@@ -60,10 +69,25 @@ export const createUser = async (req, res, next) => {
     password,
     createdAt: createdAt || new Date(),
     updatedAt: updatedAt || new Date(),
-    role: role || "reader",
+    role: "reader",
   };
-
   try {
+    const missingFields = checkRequiredFields(datas, [
+      "firstName",
+      "lastName",
+      "displayName",
+      "email",
+      "password",
+    ]);
+
+    if (missingFields.length > 0) {
+      throw new AppError(
+        400,
+        "fail",
+        `${missingFields.join(", ")} are required`
+      );
+    }
+
     const user = await userService.createOne(datas);
     res.status(201).json(user);
   } catch (error) {
@@ -195,6 +219,34 @@ export const updateUserAccountStatus = async (req, res, next) => {
     }
 
     const user = await userService.updateAccountStatus(userId, status);
+
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserRole = async (req, res, next) => {
+  try {
+    const {
+      params: { id: userId },
+      body: { role },
+      session: {
+        user: { id: currentUserId },
+      },
+    } = req;
+
+    if (!userId || !Number(userId)) {
+      throw new AppError(400, "fail", "Missing user id");
+    }
+
+    await userService.canAccessUser("user:updateRole", currentUserId, userId);
+
+    if (!role) {
+      throw new AppError(400, "fail", "Missing role");
+    }
+
+    const user = await userService.updateRole(userId, role);
 
     res.status(200).json(user);
   } catch (error) {

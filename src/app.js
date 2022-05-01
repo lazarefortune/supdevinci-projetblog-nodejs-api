@@ -6,6 +6,7 @@ import hpp from "hpp";
 import cors from "cors";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
@@ -44,7 +45,7 @@ app.use(
   })
 );
 
-// Data sanitization against XSS(clean user input from malicious HTML code)
+// Data sanitization
 app.use(xss());
 
 // Prevent parameter pollution
@@ -52,6 +53,7 @@ app.use(hpp());
 
 app.use(express.json());
 
+// TODO: Implement swagger
 // SWAGGER API DOCS
 const swaggerOptions = {
   swaggerDefinition: {
@@ -77,7 +79,6 @@ app.get("/", async (req, res, next) => {
     message: "Welcome to the Blog API",
   });
 });
-
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);

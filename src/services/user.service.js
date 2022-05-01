@@ -5,8 +5,8 @@ import User from "../db/models/user.model.js";
 import APIFeatures from "../utils/apiFeatures.js";
 import appError from "../utils/appError.js";
 
+import { roles } from "../config/roles.js";
 import { hashPassword, comparePassword } from "../security/password/index.js";
-
 import { securityHelper } from "../utils/tools.js";
 
 export const findOneByField = async (field, value) => {
@@ -125,10 +125,7 @@ export const findOneById = async (userId) => {
 
 export const updateOneWithPatch = async (userId, user) => {
   try {
-    const isUserExist = await User.query().findById(userId);
-    if (!isUserExist) {
-      throw new appError(404, "fail", "No user found with that id");
-    }
+    await findOneById(userId);
 
     if (user.email) {
       if (!securityHelper.emailRegex.test(user.email)) {
@@ -151,10 +148,8 @@ export const updateOneWithPatch = async (userId, user) => {
 
 export const deleteOne = async (userId) => {
   try {
-    const user = await User.query().findById(userId);
-    if (!user) {
-      throw new appError(404, "fail", "No user found with that id");
-    }
+    const user = await findOneById(userId);
+
     await user.$query().delete();
   } catch (error) {
     throw error;
@@ -163,10 +158,7 @@ export const deleteOne = async (userId) => {
 
 export const updatePassword = async (userId, oldPassword, newPassword) => {
   try {
-    const user = await User.query().findById(userId);
-    if (!user) {
-      throw new appError(404, "fail", "No user found with that id");
-    }
+    const user = await findOneById(userId);
 
     const isPasswordValid = comparePassword(
       oldPassword,
@@ -205,14 +197,30 @@ export const updatePassword = async (userId, oldPassword, newPassword) => {
 
 export const updateAccountStatus = async (userId, isActive) => {
   try {
-    const user = await User.query().findById(userId);
-
-    if (!user) {
-      throw new appError(404, "fail", "No user found with that id");
-    }
+    const user = await findOneById(userId);
 
     await user.$query().patch({
       activated: isActive,
+    });
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateRole = async (userId, role) => {
+  try {
+    const user = await findOneById(userId);
+
+    const rolesList = roles.map((role) => role.name);
+
+    if (!rolesList.includes(role)) {
+      throw new appError(400, "fail", "Invalid role");
+    }
+
+    await user.$query().patch({
+      role,
     });
 
     return user;
@@ -225,10 +233,7 @@ export const updateAccountStatus = async (userId, isActive) => {
 
 export const findAllPosts = async (userId, asAdmin = false) => {
   try {
-    const user = await User.query().findById(userId);
-    if (!user) {
-      throw new appError(404, "fail", "No user found with that id");
-    }
+    const user = await findOneById(userId);
     if (asAdmin) {
       return user.$relatedQuery("posts").withGraphFetched("author");
     }
@@ -243,10 +248,7 @@ export const findAllPosts = async (userId, asAdmin = false) => {
 
 export const findAllComments = async (userId) => {
   try {
-    const user = await User.query().findById(userId);
-    if (!user) {
-      throw new appError(404, "fail", "No user found with that id");
-    }
+    const user = await findOneById(userId);
     return user.$relatedQuery("comments");
   } catch (error) {
     throw error;
@@ -261,6 +263,7 @@ const isGranted = (action, user, userTarget = null) => {
     "user:delete",
     "user:create",
     "user:updatePassword",
+    "user:updateRole",
     "user:updateAccountStatus",
   ];
 
@@ -272,7 +275,11 @@ const isGranted = (action, user, userTarget = null) => {
     return true;
   }
 
-  if (action === "user:readAll" || action === "user:updateAccountStatus") {
+  if (
+    action === "user:readAll" ||
+    action === "user:updateAccountStatus" ||
+    action === "user:updateRole"
+  ) {
     return false;
   }
 

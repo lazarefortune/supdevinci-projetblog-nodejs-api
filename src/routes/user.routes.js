@@ -2,24 +2,28 @@ import express from "express";
 import * as userController from "../controllers/user.controller.js";
 import auth from "../middlewares/auth.middleware.js";
 import isGranted from "../middlewares/role.middleware.js";
+
 const router = express.Router();
 
 router.post("/login", userController.signInUser);
 router.post("/register", userController.createUser);
-
-// Auth routes
-// router.use([auth]);
 
 router.get("/", auth, userController.getAllUsers);
 router.get("/:id", auth, userController.getUser);
 router.put("/:id", auth, userController.updateUser);
 router.patch("/:id", auth, userController.updateUser);
 router.put("/:id/password", auth, userController.updateUserPassword);
-router.patch(
+router.put(
   "/:id/account/status",
   auth,
-  // isGranted(["admin"]),
+  isGranted(["admin"]),
   userController.updateUserAccountStatus
+);
+router.put(
+  "/:id/role",
+  auth,
+  isGranted(["admin"]),
+  userController.updateUserRole
 );
 
 router.delete("/:id", auth, userController.deleteUser);
