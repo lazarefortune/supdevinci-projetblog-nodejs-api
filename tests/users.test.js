@@ -1,6 +1,6 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import app from "../src/server.js";
+import server from "../src/server.js";
 
 chai.should();
 chai.use(chaiHttp);
@@ -9,7 +9,7 @@ describe("Run all users tests", () => {
   describe("Sign in user", () => {
     it("It should return a token and user informations", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "admin@gmail.com",
@@ -28,7 +28,7 @@ describe("Run all users tests", () => {
   describe("Sign in user with bad password", () => {
     it("It should return a 401 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "admin@gmail.com",
@@ -48,7 +48,7 @@ describe("Run all users tests", () => {
   describe("Sign in user with bad email", () => {
     it("It should return a 401 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "badEmail@gmail.com",
@@ -68,7 +68,7 @@ describe("Run all users tests", () => {
   describe("Sign in user with bad email format", () => {
     it("It should return a 401 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "bal@.m",
@@ -88,7 +88,7 @@ describe("Run all users tests", () => {
   describe("Sign in user with bad email and bad password", () => {
     it("It should return a 401 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "bademail@gmail.com",
@@ -116,7 +116,7 @@ describe("Run all users tests", () => {
       };
 
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/register")
         .send(fakeUser)
         .end((err, res) => {
@@ -138,7 +138,7 @@ describe("Run all users tests", () => {
       };
 
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/register")
         .send(fakeUser)
         .end((err, res) => {
@@ -160,7 +160,7 @@ describe("Run all users tests", () => {
       };
 
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/register")
         .send(fakeUser)
         .end((err, res) => {
@@ -182,7 +182,7 @@ describe("Run all users tests", () => {
       };
 
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/register")
         .send(fakeUser)
         .end((err, res) => {

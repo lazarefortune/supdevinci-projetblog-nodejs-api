@@ -1,6 +1,6 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import app from "../src/server.js";
+import server from "../src/server.js";
 
 chai.should();
 chai.use(chaiHttp);
@@ -10,7 +10,7 @@ describe("Run all comments tests", () => {
     it("It should return the new comment", (done) => {
       // Sign in user
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "user@gmail.com",
@@ -23,7 +23,7 @@ describe("Run all comments tests", () => {
           res.body.should.have.property("token");
           // Create comment
           chai
-            .request(app)
+            .request(server)
             .post("/api/comments")
             .set("authentication", `${res.body.token}`)
             .send({
@@ -43,7 +43,7 @@ describe("Run all comments tests", () => {
   describe("Create comment without sign in", () => {
     it("It should return a 403 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/comments")
         .send({
           text: "This is a comment",
@@ -61,7 +61,7 @@ describe("Run all comments tests", () => {
     it("It should return a 400 error", (done) => {
       // Sign in user
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "user@gmail.com",
@@ -74,7 +74,7 @@ describe("Run all comments tests", () => {
           res.body.should.have.property("token");
           // Create comment
           chai
-            .request(app)
+            .request(server)
             .post("/api/comments")
             .set("authentication", `${res.body.token}`)
             .send({
@@ -96,7 +96,7 @@ describe("Run all comments tests", () => {
     it("It should return a 404 error", (done) => {
       // Sign in user
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "user@gmail.com",
@@ -109,7 +109,7 @@ describe("Run all comments tests", () => {
           res.body.should.have.property("token");
           // Create comment
           chai
-            .request(app)
+            .request(server)
             .post("/api/comments")
             .set("authentication", `${res.body.token}`)
             .send({

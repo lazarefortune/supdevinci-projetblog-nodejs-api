@@ -1,6 +1,6 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import app from "../src/server.js";
+import server from "../src/server.js";
 
 chai.should();
 chai.use(chaiHttp);
@@ -9,7 +9,7 @@ describe("Run all posts tests", () => {
   describe("GET all posts", () => {
     it("It should return all posts", (done) => {
       chai
-        .request(app)
+        .request(server)
         .get("/api/posts")
         .end((err, res) => {
           res.should.have.status(200);
@@ -25,7 +25,7 @@ describe("Run all posts tests", () => {
     it("It should return a post by id", (done) => {
       // login user before get post by id
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "admin@gmail.com",
@@ -38,7 +38,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("token");
           // get post by id
           chai
-            .request(app)
+            .request(server)
             .get("/api/posts/1")
             .set("authentication", `${res.body.token}`)
             .end((err, res) => {
@@ -59,7 +59,7 @@ describe("Run all posts tests", () => {
     it("It should return an 404 error", (done) => {
       // login user before get post by id
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "admin@gmail.com",
@@ -72,7 +72,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("token");
           // get post by id
           chai
-            .request(app)
+            .request(server)
             .get("/api/posts/sd")
             .set("authentication", `${res.body.token}`)
             .end((err, res) => {
@@ -89,7 +89,7 @@ describe("Run all posts tests", () => {
     it("It should return a 403 error", (done) => {
       // get post by id
       chai
-        .request(app)
+        .request(server)
         .get("/api/posts/1")
         .end((err, res) => {
           res.should.have.status(403);
@@ -102,7 +102,7 @@ describe("Run all posts tests", () => {
   describe("POST add new post", () => {
     it("It should return the new post", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "admin@gmail.com",
@@ -114,7 +114,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("user");
           res.body.should.have.property("token");
           chai
-            .request(app)
+            .request(server)
             .post("/api/posts")
             .set("authentication", `${res.body.token}`)
             .send({
@@ -139,7 +139,7 @@ describe("Run all posts tests", () => {
   describe("POST add post with user role reader", () => {
     it("It should return a 403 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "user@gmail.com",
@@ -151,7 +151,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("user");
           res.body.should.have.property("token");
           chai
-            .request(app)
+            .request(server)
             .post("/api/posts")
             .set("authentication", `${res.body.token}`)
             .end((err, res) => {
@@ -168,7 +168,7 @@ describe("Run all posts tests", () => {
     it("It should return a 403 error", (done) => {
       // get post by id
       chai
-        .request(app)
+        .request(server)
         .post("/api/posts")
         .send({
           title: "Post 1",
@@ -186,7 +186,7 @@ describe("Run all posts tests", () => {
   describe("PUT update post", () => {
     it("It should return the updated post", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "admin@gmail.com",
@@ -198,7 +198,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("user");
           res.body.should.have.property("token");
           chai
-            .request(app)
+            .request(server)
             .put("/api/posts/1")
             .set("authentication", `${res.body.token}`)
             .send({
@@ -223,7 +223,7 @@ describe("Run all posts tests", () => {
   describe("PUT update post whit user role reader", () => {
     it("It should return a 403 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "user@gmail.com",
@@ -235,7 +235,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("user");
           res.body.should.have.property("token");
           chai
-            .request(app)
+            .request(server)
             .put("/api/posts/1")
             .set("authentication", `${res.body.token}`)
             .send({
@@ -256,7 +256,7 @@ describe("Run all posts tests", () => {
   describe("DELETE post", () => {
     it("It should return the deleted message", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "admin@gmail.com",
@@ -268,7 +268,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("user");
           res.body.should.have.property("token");
           chai
-            .request(app)
+            .request(server)
             .delete("/api/posts/1")
             .set("authentication", `${res.body.token}`)
             .end((err, res) => {
@@ -297,7 +297,7 @@ describe("Run all posts tests", () => {
 
       // sign in author
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send(author)
         .end((err, res) => {
@@ -307,7 +307,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("token");
           // Create post
           chai
-            .request(app)
+            .request(server)
             .post("/api/posts")
             .set("authentication", `${res.body.token}`)
             .send({
@@ -323,7 +323,7 @@ describe("Run all posts tests", () => {
 
               // Sign up other author
               chai
-                .request(app)
+                .request(server)
                 .post("/api/users/register")
                 .send({
                   ...otherAuthor,
@@ -338,7 +338,7 @@ describe("Run all posts tests", () => {
 
                   // Sign in the second author
                   chai
-                    .request(app)
+                    .request(server)
                     .post("/api/users/login")
                     .send(otherAuthor)
                     .end((err, res) => {
@@ -348,7 +348,7 @@ describe("Run all posts tests", () => {
                       res.body.should.have.property("token");
                       // Delete post
                       chai
-                        .request(app)
+                        .request(server)
                         .delete(`/api/posts/${postId}`)
                         .set("authentication", `${res.body.token}`)
                         .end((err, res) => {
@@ -371,7 +371,7 @@ describe("Run all posts tests", () => {
   describe("DELETE post with user who is not granted access", () => {
     it("It should return a 403 error", (done) => {
       chai
-        .request(app)
+        .request(server)
         .post("/api/users/login")
         .send({
           email: "user@gmail.com",
@@ -383,7 +383,7 @@ describe("Run all posts tests", () => {
           res.body.should.have.property("user");
           res.body.should.have.property("token");
           chai
-            .request(app)
+            .request(server)
             .delete("/api/posts/1")
             .set("authentication", `${res.body.token}`)
             .end((err, res) => {
