@@ -1,9 +1,9 @@
-import { Model } from "objection";
-import Post from "./post.model.js";
-import Comment from "./comment.model.js";
+import { Model } from "objection"
+import Post from "./post.model.js"
+import Comment from "./comment.model.js"
 
 class User extends Model {
-  static tableName = "users";
+  static tableName = "users"
 
   static get jsonSchema() {
     return {
@@ -28,7 +28,7 @@ class User extends Model {
         passwordSalt: { type: "string" },
         role: { type: "string", minLength: 1, maxLength: 255 },
       },
-    };
+    }
   }
 
   static get relationMappings() {
@@ -49,23 +49,23 @@ class User extends Model {
           to: "comments.authorId",
         },
       },
-    };
+    }
   }
 
   get isAdmin() {
-    return this.role === "admin";
+    return this.role === "admin"
   }
 
   get isActive() {
-    return this.activated;
+    return this.activated
   }
 
   $formatJson(json) {
-    json = super.$formatJson(json);
-    delete json.passwordHash;
-    delete json.passwordSalt;
-    return json;
+    json = super.$formatJson(json)
+    delete json.passwordHash
+    delete json.passwordSalt
+    return json
   }
 }
 
-export default User;
+export default User

@@ -1,4 +1,4 @@
-import AppError from "../utils/appError.js";
+import AppError from "../utils/appError.js"
 
 const isGranted = (roles) => {
   return (req, res, next) => {
@@ -7,21 +7,21 @@ const isGranted = (roles) => {
         session: {
           user: { role },
         },
-      } = req;
+      } = req
 
       if (!roles.includes(role)) {
         throw new AppError(
           403,
           "fail",
           "You are not authorized to perform this action"
-        );
+        )
       }
 
-      next();
+      next()
     } catch (error) {
-      next(error);
+      next(error)
     }
-  };
-};
+  }
+}
 
-export default isGranted;
+export default isGranted

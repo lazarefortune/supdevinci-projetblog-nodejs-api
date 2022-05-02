@@ -1,15 +1,15 @@
-import * as postService from "../services/post.service.js";
+import * as postService from "../services/post.service.js"
 
-import AppError from "../utils/appError.js";
+import AppError from "../utils/appError.js"
 
 export const getAllPosts = async (req, res, next) => {
   try {
-    const posts = await postService.findAll(req.query);
-    res.status(200).json(posts);
+    const posts = await postService.findAll(req.query)
+    res.status(200).json(posts)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const getAllPostsAsAdmin = async (req, res, next) => {
   try {
@@ -17,16 +17,16 @@ export const getAllPostsAsAdmin = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
-    await postService.canAccessPost("readAllAsAdmin", currentUserId);
+    await postService.canAccessPost("readAllAsAdmin", currentUserId)
 
-    const posts = await postService.findAll(req.query, true);
-    res.status(200).json(posts);
+    const posts = await postService.findAll(req.query, true)
+    res.status(200).json(posts)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const createPost = async (req, res, next) => {
   try {
@@ -35,9 +35,9 @@ export const createPost = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
-    await postService.canAccessPost("create", currentUserId);
+    await postService.canAccessPost("create", currentUserId)
 
     const datas = {
       title,
@@ -46,14 +46,14 @@ export const createPost = async (req, res, next) => {
       createdAt: createdAt || new Date(),
       updatedAt: updatedAt || new Date(),
       authorId: currentUserId,
-    };
+    }
 
-    const post = await postService.createOne(datas);
-    res.status(201).json(post);
+    const post = await postService.createOne(datas)
+    res.status(201).json(post)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const getPost = async (req, res, next) => {
   try {
@@ -62,21 +62,21 @@ export const getPost = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
-    await postService.canAccessPost("readOne", currentUserId, postId);
+    await postService.canAccessPost("readOne", currentUserId, postId)
 
     if (!postId || !Number(postId)) {
-      throw new AppError(404, "fail", "Missing post id");
+      throw new AppError(404, "fail", "Missing post id")
     }
 
-    const post = await postService.findOneById(postId);
+    const post = await postService.findOneById(postId)
 
-    res.status(200).json(post);
+    res.status(200).json(post)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const updatedPost = async (req, res, next) => {
   try {
@@ -86,28 +86,28 @@ export const updatedPost = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
-    await postService.canAccessPost("update", currentUserId, postId);
+    await postService.canAccessPost("update", currentUserId, postId)
 
     const datas = {
       title,
       content,
       isPublished,
       updatedAt: updatedAt || new Date(),
-    };
-
-    if (!postId || !Number(postId)) {
-      throw new AppError(404, "fail", "Missing post id");
     }
 
-    const post = await postService.updateOneWithPatch(postId, datas);
+    if (!postId || !Number(postId)) {
+      throw new AppError(404, "fail", "Missing post id")
+    }
 
-    res.status(200).json(post);
+    const post = await postService.updateOneWithPatch(postId, datas)
+
+    res.status(200).json(post)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const deletePost = async (req, res, next) => {
   try {
@@ -116,25 +116,25 @@ export const deletePost = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
     if (!postId || !Number(postId)) {
-      throw new AppError(404, "fail", "Missing post id");
+      throw new AppError(404, "fail", "Missing post id")
     }
 
-    await postService.canAccessPost("delete", currentUserId, postId);
+    await postService.canAccessPost("delete", currentUserId, postId)
 
-    await postService.deleteOne(postId);
+    await postService.deleteOne(postId)
 
     res.status(200).send({
       status: "success",
       statusCode: 200,
       message: "Post deleted",
-    });
+    })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const getAllPostComments = async (req, res, next) => {
   try {
@@ -143,30 +143,30 @@ export const getAllPostComments = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
-    await postService.canAccessPost("readOne", currentUserId, postId);
+    await postService.canAccessPost("readOne", currentUserId, postId)
 
     if (!postId || !Number(postId)) {
-      throw new AppError(404, "fail", "Missing post id");
+      throw new AppError(404, "fail", "Missing post id")
     }
 
-    const comments = await postService.findAllCommentsByPostId(postId);
+    const comments = await postService.findAllCommentsByPostId(postId)
 
-    res.status(200).json(comments);
+    res.status(200).json(comments)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const searchPosts = async (req, res, next) => {
   try {
     const {
       body: { search: searchString },
-    } = req;
-    const posts = await postService.searchPosts(searchString);
-    res.status(200).json(posts);
+    } = req
+    const posts = await postService.searchPosts(searchString)
+    res.status(200).json(posts)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}

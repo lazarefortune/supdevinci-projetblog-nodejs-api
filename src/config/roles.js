@@ -14,7 +14,7 @@ export const roles = [
     name: "admin",
     description: "Admin role",
   },
-];
+]
 
 const roleAccessRessource = {
   admin: {
@@ -59,23 +59,23 @@ const roleAccessRessource = {
       other: ["read"],
     },
   },
-};
+}
 
 export const isGranted = (role, ressource, action, who) => {
   if (roleAccessRessource[role] === undefined) {
-    return false;
+    return false
   }
 
   if (roleAccessRessource[role][ressource] === undefined) {
-    return false;
+    return false
   }
 
   if (roleAccessRessource[role][ressource][who] === undefined) {
-    return false;
+    return false
   }
 
   if (roleAccessRessource[role][ressource][who].includes(action)) {
-    return true;
+    return true
   }
-  return false;
-};
+  return false
+}

@@ -1,18 +1,18 @@
-import faker from "faker";
-import { hashPassword } from "../../security/password/index.js";
-import { getRandomRole } from "../../utils/tools.js";
+import faker from "faker"
+import { hashPassword } from "../../security/password/index.js"
+import { getRandomRole } from "../../utils/tools.js"
 
 const makeUserPasswordHashAndSalt = (user) => {
-  const [passwordHash, passwordSalt] = hashPassword(user.password);
+  const [passwordHash, passwordSalt] = hashPassword(user.password)
 
-  delete user.password;
+  delete user.password
 
   return {
     ...user,
     passwordHash,
     passwordSalt,
-  };
-};
+  }
+}
 
 const createInitialUsers = () => {
   let initialUsers = [
@@ -46,15 +46,15 @@ const createInitialUsers = () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     },
-  ];
+  ]
 
-  const users = initialUsers.map((user) => makeUserPasswordHashAndSalt(user));
+  const users = initialUsers.map((user) => makeUserPasswordHashAndSalt(user))
 
-  return users;
-};
+  return users
+}
 
 const createFakeUser = () => {
-  const [passwordHash, passwordSalt] = hashPassword(faker.internet.password());
+  const [passwordHash, passwordSalt] = hashPassword(faker.internet.password())
 
   return {
     firstName: faker.name.firstName(),
@@ -66,8 +66,8 @@ const createFakeUser = () => {
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
     role: getRandomRole(),
-  };
-};
+  }
+}
 
 /**
  * @param { import("knex").Knex } knex
@@ -75,14 +75,14 @@ const createFakeUser = () => {
  */
 export async function seed(knex) {
   // Deletes ALL existing entries
-  await knex("users").del();
-  const fakeUsers = [];
-  const desiredUsers = 10;
+  await knex("users").del()
+  const fakeUsers = []
+  const desiredUsers = 10
   for (let i = 0; i < desiredUsers; i++) {
-    fakeUsers.push(createFakeUser());
+    fakeUsers.push(createFakeUser())
   }
 
-  const users = [...createInitialUsers(), ...fakeUsers];
+  const users = [...createInitialUsers(), ...fakeUsers]
 
-  await knex("users").insert(users);
+  await knex("users").insert(users)
 }

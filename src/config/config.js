@@ -1,8 +1,8 @@
-import "dotenv/config";
-import * as yup from "yup";
+import "dotenv/config"
+import * as yup from "yup"
 
-import securityConfig from "./security.config.js";
-import databaseConfig from "./database.config.js";
+import securityConfig from "./security.config.js"
+import databaseConfig from "./database.config.js"
 
 const schema = yup.object().shape({
   environment: yup
@@ -41,9 +41,9 @@ const schema = yup.object().shape({
   webapp: yup.object().shape({
     origin: yup.array().of(yup.string()).required(),
   }),
-});
+})
 
-const env = process.env;
+const env = process.env
 
 const data = {
   environment: env.NODE_ENV,
@@ -53,7 +53,7 @@ const data = {
   webapp: {
     origin: env.WEB_APP_ALLOWED_ORIGINS,
   },
-};
+}
 
-const config = schema.validateSync(data);
-export default config;
+const config = schema.validateSync(data)
+export default config

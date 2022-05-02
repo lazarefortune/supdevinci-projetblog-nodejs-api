@@ -1,6 +1,6 @@
-import * as commentService from "../services/comment.service.js";
+import * as commentService from "../services/comment.service.js"
 
-import AppError from "../utils/appError.js";
+import AppError from "../utils/appError.js"
 
 export const getAllComments = async (req, res, next) => {
   try {
@@ -8,16 +8,16 @@ export const getAllComments = async (req, res, next) => {
       session: {
         user: { id: authorId },
       },
-    } = req;
+    } = req
 
-    await commentService.canAccessComment("comment:readAll", authorId);
+    await commentService.canAccessComment("comment:readAll", authorId)
 
-    const comments = await commentService.findAll(req.query);
-    res.status(200).json(comments);
+    const comments = await commentService.findAll(req.query)
+    res.status(200).json(comments)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const createComment = async (req, res, next) => {
   try {
@@ -26,18 +26,18 @@ export const createComment = async (req, res, next) => {
       session: {
         user: { id: authorId },
       },
-    } = req;
+    } = req
 
     if (!postId) {
-      throw new AppError(400, "fail", "Missing postId");
+      throw new AppError(400, "fail", "Missing postId")
     }
 
     if (!authorId) {
-      throw new AppError(400, "fail", "Missing authorId");
+      throw new AppError(400, "fail", "Missing authorId")
     }
 
     if (!content) {
-      throw new AppError(400, "fail", "Missing comment content");
+      throw new AppError(400, "fail", "Missing comment content")
     }
 
     const datas = {
@@ -46,14 +46,14 @@ export const createComment = async (req, res, next) => {
       updatedAt: updatedAt || new Date(),
       authorId,
       postId,
-    };
+    }
 
-    const comment = await commentService.createOne(datas);
-    res.status(201).json(comment);
+    const comment = await commentService.createOne(datas)
+    res.status(201).json(comment)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const getComment = async (req, res, next) => {
   try {
@@ -62,25 +62,25 @@ export const getComment = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
     if (!commentId || !Number(commentId)) {
-      throw new AppError(400, "fail", "Missing comment id");
+      throw new AppError(400, "fail", "Missing comment id")
     }
 
     await commentService.canAccessComment(
       "comment:read",
       currentUserId,
       commentId
-    );
+    )
 
-    const comment = await commentService.findOneById(commentId);
+    const comment = await commentService.findOneById(commentId)
 
-    res.status(200).json(comment);
+    res.status(200).json(comment)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const updatedComment = async (req, res, next) => {
   try {
@@ -90,37 +90,37 @@ export const updatedComment = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
     await commentService.canAccessComment(
       "comment:update",
       currentUserId,
       commentId
-    );
+    )
 
     const datas = {
       content,
       updatedAt: updatedAt || new Date(),
-    };
+    }
 
     if (!commentId || !Number(commentId)) {
-      throw new AppError(400, "fail", "Missing comment id");
+      throw new AppError(400, "fail", "Missing comment id")
     }
 
     if (!content) {
-      throw new AppError(400, "fail", "Missing comment content");
+      throw new AppError(400, "fail", "Missing comment content")
     }
 
     const comment = await commentService.updateOneWithPatch(
       Number(commentId),
       datas
-    );
+    )
 
-    res.status(200).json(comment);
+    res.status(200).json(comment)
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
 export const deleteComment = async (req, res, next) => {
   try {
@@ -129,26 +129,26 @@ export const deleteComment = async (req, res, next) => {
       session: {
         user: { id: currentUserId },
       },
-    } = req;
+    } = req
 
     if (!commentId || !Number(commentId)) {
-      throw new AppError(404, "fail", "Missing comment id");
+      throw new AppError(404, "fail", "Missing comment id")
     }
 
     await commentService.canAccessComment(
       "comment:delete",
       currentUserId,
       commentId
-    );
+    )
 
-    await commentService.deleteOne(commentId);
+    await commentService.deleteOne(commentId)
 
     res.status(200).send({
       status: "success",
       statusCode: 200,
       message: "Comment deleted",
-    });
+    })
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}

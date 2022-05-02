@@ -1,7 +1,7 @@
-import { pbkdf2Sync, randomBytes } from "crypto";
-import config from "../../config/config.js";
+import { pbkdf2Sync, randomBytes } from "crypto"
+import config from "../../config/config.js"
 
-const { keylen, pepper, iteration, digest } = config.security.password;
+const { keylen, pepper, iteration, digest } = config.security.password
 
 export const hashPassword = (
   password,
@@ -11,9 +11,10 @@ export const hashPassword = (
     "hex"
   ),
   salt,
-];
+]
 
 export const comparePassword = (password, passwordHash, passwordSalt) => {
-  const [passwordHash2, passwordSalt2] = hashPassword(password, passwordSalt);
-  return passwordHash === passwordHash2;
-};
+  // eslint-disable-next-line no-unused-vars
+  const [passwordHash2, passwordSalt2] = hashPassword(password, passwordSalt)
+  return passwordHash === passwordHash2
+}

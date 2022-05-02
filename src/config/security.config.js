@@ -1,6 +1,6 @@
-import "dotenv/config";
+import "dotenv/config"
 
-const env = process.env;
+const env = process.env
 
 export default {
   password: {
@@ -13,4 +13,4 @@ export default {
     secret: env.SECURITY_SESSION_SECRET,
     expireAfter: "3 days",
   },
-};
+}

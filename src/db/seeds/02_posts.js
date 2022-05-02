@@ -1,5 +1,5 @@
-import faker from "faker";
-import { getRandomNumberBetween } from "../../utils/tools.js";
+import faker from "faker"
+import { getRandomNumberBetween } from "../../utils/tools.js"
 
 const createFakePost = () => {
   return {
@@ -9,8 +9,8 @@ const createFakePost = () => {
     updatedAt: faker.datatype.datetime(),
     isPublished: faker.datatype.boolean(),
     authorId: getRandomNumberBetween(1, 10),
-  };
-};
+  }
+}
 
 /**
  * @param { import("knex").Knex } knex
@@ -18,12 +18,12 @@ const createFakePost = () => {
  */
 export async function seed(knex) {
   // Deletes ALL existing entries
-  await knex("posts").del();
-  const fakePosts = [];
-  const desiredPosts = 100;
+  await knex("posts").del()
+  const fakePosts = []
+  const desiredPosts = 100
   for (let index = 0; index < desiredPosts; index++) {
-    fakePosts.push(createFakePost());
+    fakePosts.push(createFakePost())
   }
 
-  await knex("posts").insert(fakePosts);
+  await knex("posts").insert(fakePosts)
 }

@@ -1,9 +1,9 @@
-import { Model } from "objection";
-import Post from "./post.model.js";
-import User from "./user.model.js";
+import { Model } from "objection"
+import Post from "./post.model.js"
+import User from "./user.model.js"
 
 class Comment extends Model {
-  static tableName = "comments";
+  static tableName = "comments"
 
   static get relationMappings() {
     return {
@@ -28,8 +28,8 @@ class Comment extends Model {
           to: "users.id",
         },
       },
-    };
+    }
   }
 }
 
-export default Comment;
+export default Comment

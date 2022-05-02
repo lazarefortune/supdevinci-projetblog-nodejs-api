@@ -1,11 +1,11 @@
-import "dotenv/config";
+import "dotenv/config"
 
-const env = process.env;
+const env = process.env
 
-let dbConfig = {};
+let dbConfig = {}
 
 if (!["production", "development", "test"].includes(env.NODE_ENV)) {
-  throw new Error("Invalid NODE_ENV");
+  throw new Error("Invalid NODE_ENV")
 }
 
 if (env.NODE_ENV == "production") {
@@ -18,7 +18,7 @@ if (env.NODE_ENV == "production") {
       password: env.DB_PASSWORD,
       database: env.DB_NAME,
     },
-  };
+  }
 }
 
 if (env.NODE_ENV == "development") {
@@ -31,7 +31,7 @@ if (env.NODE_ENV == "development") {
       password: env.DB_PASSWORD_DEV,
       database: env.DB_NAME_DEV,
     },
-  };
+  }
 }
 if (env.NODE_ENV == "test") {
   dbConfig = {
@@ -43,7 +43,7 @@ if (env.NODE_ENV == "test") {
       password: env.DB_PASSWORD_TEST,
       database: env.DB_NAME_TEST,
     },
-  };
+  }
 }
 
 export default {
@@ -55,4 +55,4 @@ export default {
   seeds: {
     directory: "./src/db/seeds/",
   },
-};
+}

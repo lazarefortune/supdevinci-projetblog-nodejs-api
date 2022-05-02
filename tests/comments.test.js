@@ -1,9 +1,10 @@
-import chai from "chai";
-import chaiHttp from "chai-http";
-import server from "../src/server.js";
+/* eslint-disable no-undef */
+import chai from "chai"
+import chaiHttp from "chai-http"
+import server from "../src/server.js"
 
-chai.should();
-chai.use(chaiHttp);
+chai.should()
+chai.use(chaiHttp)
 
 describe("Run all comments tests", () => {
   describe("Create comment", () => {
@@ -17,10 +18,10 @@ describe("Run all comments tests", () => {
           password: "user",
         })
         .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("user");
-          res.body.should.have.property("token");
+          res.should.have.status(200)
+          res.body.should.be.a("object")
+          res.body.should.have.property("user")
+          res.body.should.have.property("token")
           // Create comment
           chai
             .request(server)
@@ -31,14 +32,14 @@ describe("Run all comments tests", () => {
               postId: 1,
             })
             .end((err, res) => {
-              res.should.have.status(201);
-              res.body.should.be.a("object");
-              res.body.should.have.property("content");
-              done();
-            });
-        });
-    });
-  });
+              res.should.have.status(201)
+              res.body.should.be.a("object")
+              res.body.should.have.property("content")
+              done()
+            })
+        })
+    })
+  })
 
   describe("Create comment without sign in", () => {
     it("It should return a 403 error", (done) => {
@@ -50,12 +51,12 @@ describe("Run all comments tests", () => {
           postId: 1,
         })
         .end((err, res) => {
-          res.should.have.status(403);
-          res.body.should.be.a("object");
-          done();
-        });
-    });
-  });
+          res.should.have.status(403)
+          res.body.should.be.a("object")
+          done()
+        })
+    })
+  })
 
   describe("Create comment with bad postId", () => {
     it("It should return a 400 error", (done) => {
@@ -68,10 +69,10 @@ describe("Run all comments tests", () => {
           password: "user",
         })
         .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("user");
-          res.body.should.have.property("token");
+          res.should.have.status(200)
+          res.body.should.be.a("object")
+          res.body.should.have.property("user")
+          res.body.should.have.property("token")
           // Create comment
           chai
             .request(server)
@@ -83,14 +84,14 @@ describe("Run all comments tests", () => {
               postId: 0,
             })
             .end((err, res) => {
-              res.should.have.status(400);
-              res.body.should.be.a("object");
-              res.body.should.have.property("message").equal("Missing postId");
-              done();
-            });
-        });
-    });
-  });
+              res.should.have.status(400)
+              res.body.should.be.a("object")
+              res.body.should.have.property("message").equal("Missing postId")
+              done()
+            })
+        })
+    })
+  })
 
   describe("Create comment with postId who dosn't exist", () => {
     it("It should return a 404 error", (done) => {
@@ -103,10 +104,10 @@ describe("Run all comments tests", () => {
           password: "user",
         })
         .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("user");
-          res.body.should.have.property("token");
+          res.should.have.status(200)
+          res.body.should.be.a("object")
+          res.body.should.have.property("user")
+          res.body.should.have.property("token")
           // Create comment
           chai
             .request(server)
@@ -118,14 +119,14 @@ describe("Run all comments tests", () => {
               postId: 1000,
             })
             .end((err, res) => {
-              res.should.have.status(404);
-              res.body.should.be.a("object");
+              res.should.have.status(404)
+              res.body.should.be.a("object")
               res.body.should.have
                 .property("message")
-                .equal("No post found with that id");
-              done();
-            });
-        });
-    });
-  });
-});
+                .equal("No post found with that id")
+              done()
+            })
+        })
+    })
+  })
+})
