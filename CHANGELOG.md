@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.5.6...v2.6.0) (2022-05-02)
+
+
+### Features
+
+* **routes:** add find own account route ([8f2bbb6](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/8f2bbb6826e608f1fb7dd474c9e2275ab0566ddc))
+
 ### [2.5.6](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.5.5...v2.5.6) (2022-05-02)
 
 ### [2.5.5](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.5.4...v2.5.5) (2022-05-02)
