@@ -118,6 +118,24 @@ export const getUser = async (req, res, next) => {
   }
 }
 
+export const getCurrentUser = async (req, res, next) => {
+  try {
+    const {
+      session: {
+        user: { id: currentUserId },
+      },
+    } = req
+
+    await userService.canAccessUser("user:read", currentUserId, currentUserId)
+
+    const user = await userService.findOneById(currentUserId)
+
+    res.status(200).json(user)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const updateUser = async (req, res, next) => {
   try {
     const {

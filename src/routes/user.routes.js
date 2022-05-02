@@ -9,6 +9,7 @@ router.post("/login", userController.signInUser)
 router.post("/register", userController.createUser)
 
 router.get("/", auth, userController.getAllUsers)
+router.get("/me", auth, userController.getCurrentUser)
 router.get("/:id", auth, userController.getUser)
 router.put("/:id", auth, userController.updateUser)
 router.patch("/:id", auth, userController.updateUser)
