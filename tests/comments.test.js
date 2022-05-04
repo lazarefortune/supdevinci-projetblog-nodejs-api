@@ -1,3 +1,4 @@
+/* eslint-disable n/handle-callback-err */
 /* eslint-disable no-undef */
 import chai from "chai"
 import chaiHttp from "chai-http"
@@ -31,6 +32,7 @@ describe("Run all comments tests", () => {
               content: "This is a comment",
               postId: 1,
             })
+            // eslint-disable-next-line n/handle-callback-err
             .end((err, res) => {
               res.should.have.status(201)
               res.body.should.be.a("object")

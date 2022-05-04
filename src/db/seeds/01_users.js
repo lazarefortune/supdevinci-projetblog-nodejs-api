@@ -15,7 +15,7 @@ const makeUserPasswordHashAndSalt = (user) => {
 }
 
 const createInitialUsers = () => {
-  let initialUsers = [
+  const initialUsers = [
     {
       firstName: "AdminFirstName",
       lastName: "AdminLastName",
@@ -61,8 +61,8 @@ const createFakeUser = () => {
     lastName: faker.name.lastName(),
     displayName: faker.internet.userName(),
     email: faker.internet.email(),
-    passwordHash: passwordHash,
-    passwordSalt: passwordSalt,
+    passwordHash,
+    passwordSalt,
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
     role: getRandomRole(),

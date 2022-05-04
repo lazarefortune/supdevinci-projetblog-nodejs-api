@@ -8,10 +8,7 @@ const auth = (req, res, next) => {
   } = req
 
   try {
-    const { payload } = jsonwebtoken.verify(
-      jwt,
-      config.security.session.secret
-    )
+    const { payload } = jsonwebtoken.verify(jwt, config.security.session.secret)
 
     req.session = payload
     next()

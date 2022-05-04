@@ -2,7 +2,7 @@ import Post from "../db/models/post.model.js"
 import User from "../db/models/user.model.js"
 
 import APIFeatures from "../utils/apiFeatures.js"
-import appError from "../utils/appError.js"
+import AppError from "../utils/appError.js"
 
 const findOneByTitle = async (title) => {
   const post = await Post.query().findOne({ title })
@@ -42,17 +42,17 @@ export const createOne = async (datas) => {
     const postExist = await findOneByTitle(datas.title)
 
     if (postExist) {
-      throw new appError(409, "fail", "Post already exist")
+      throw new AppError(409, "fail", "Post already exist")
     }
 
     if (!datas.authorId) {
-      throw new appError(400, "fail", "Missing authorId")
+      throw new AppError(400, "fail", "Missing authorId")
     }
 
     const user = await User.query().findById(datas.authorId)
 
     if (!user) {
-      throw new appError(404, "fail", "No user found with that id")
+      throw new AppError(404, "fail", "No user found with that id")
     }
 
     return Post.query().insert(datas)
@@ -66,29 +66,28 @@ export const findOneById = async (postId) => {
     const post = await Post.query()
       .withGraphFetched("[author]")
       .findById(postId)
-    
+
     if (!post) {
-      throw new appError(404, "fail", "No Post found with that id")
+      throw new AppError(404, "fail", "No Post found with that id")
     }
     return post
   } catch (error) {
     throw error
   }
-
 }
 
 export const updateOneWithPatch = async (postId, datas) => {
   try {
     const oldPost = await Post.query().findById(postId)
     if (!oldPost) {
-      throw new appError(404, "fail", "No post found with that id")
+      throw new AppError(404, "fail", "No post found with that id")
     }
 
     if (datas.title) {
       const postExist = await findOneByTitle(datas.title)
 
       if (postExist && postExist.id !== Number(postId)) {
-        throw new appError(409, "fail", "title already exist")
+        throw new AppError(409, "fail", "title already exist")
       }
     }
 
@@ -103,7 +102,7 @@ export const deleteOne = async (postId) => {
   try {
     const post = await Post.query().findById(postId)
     if (!post) {
-      throw new appError(404, "fail", "No post found with that id")
+      throw new AppError(404, "fail", "No post found with that id")
     }
     await post.$query().delete()
   } catch (error) {
@@ -115,10 +114,10 @@ export const findAllCommentsByPostId = async (postId, asPublic = false) => {
   try {
     const post = await Post.query().findById(postId)
     if (!post) {
-      throw new appError(404, "fail", "No post found with that id")
+      throw new AppError(404, "fail", "No post found with that id")
     }
     if (asPublic && !post.isPublic) {
-      throw new appError(403, "fail", "You are not authorized")
+      throw new AppError(403, "fail", "You are not authorized")
     }
     return post.$relatedQuery("comments").withGraphFetched("author")
   } catch (error) {
@@ -142,45 +141,45 @@ const isGranted = (action, user, post = null) => {
   }
 
   switch (action) {
-  case "create": {
-    const allowedRolesToCreate = ["author"]
-    if (allowedRolesToCreate.includes(user.role)) {
-      isAuthorized = true
+    case "create": {
+      const allowedRolesToCreate = ["author"]
+      if (allowedRolesToCreate.includes(user.role)) {
+        isAuthorized = true
+      }
+      break
     }
-    break
-  }
-  case "readOne": {  
-    const allowedRolesToReadOne = ["author", "reader"]
-    if (
-      (post.isPublic && allowedRolesToReadOne.includes(user.role)) ||
+    case "readOne": {
+      const allowedRolesToReadOne = ["author", "reader"]
+      if (
+        (post.isPublic && allowedRolesToReadOne.includes(user.role)) ||
         (post.authorId === user.id && allowedRolesToReadOne.includes(user.role))
-    ) {
-      isAuthorized = true
+      ) {
+        isAuthorized = true
+      }
+      break
     }
-    break
-  }
-  case "update":{
-    const allowedRolesToUpdate = ["author"]
-    if (
-      allowedRolesToUpdate.includes(user.role) &&
+    case "update": {
+      const allowedRolesToUpdate = ["author"]
+      if (
+        allowedRolesToUpdate.includes(user.role) &&
         post.authorId === user.id
-    ) {
-      isAuthorized = true
+      ) {
+        isAuthorized = true
+      }
+      break
     }
-    break
-  }
-  case "delete": {
-    const allowedRolesToDelete = ["author"]
-    if (
-      allowedRolesToDelete.includes(user.role) &&
+    case "delete": {
+      const allowedRolesToDelete = ["author"]
+      if (
+        allowedRolesToDelete.includes(user.role) &&
         post.authorId === user.id
-    ) {
-      isAuthorized = true
+      ) {
+        isAuthorized = true
+      }
+      break
     }
-    break
-  }
-  default:
-    break
+    default:
+      break
   }
   return isAuthorized
 }
@@ -189,7 +188,7 @@ export const canAccessPost = async (action, userId, postId = null) => {
   try {
     const user = await User.query().findById(userId)
     if (!user) {
-      throw new appError(404, "fail", "No user found with that id")
+      throw new AppError(404, "fail", "No user found with that id")
     }
 
     let post = null
@@ -197,12 +196,12 @@ export const canAccessPost = async (action, userId, postId = null) => {
     if (postId) {
       post = await Post.query().findById(postId)
       if (!post) {
-        throw new appError(404, "fail", "No post found with that id")
+        throw new AppError(404, "fail", "No post found with that id")
       }
     }
 
     if (!isGranted(action, user, post)) {
-      throw new appError(
+      throw new AppError(
         403,
         "fail",
         `You are not authorized to ${action} post`
