@@ -7,7 +7,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production nodemon ./src/server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./src/server.js",
-    "test": "cross-env NODE_ENV=test npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run && mocha tests/**/*.js",
+    "test": "cross-env NODE_ENV=test npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run && mocha tests/**/*.js --exit",
     "knex": "knex",
     "migrate": "npx knex migrate:latest",
     "reset": "npx knex migrate:rollback",
