@@ -8,11 +8,19 @@ const router = express.Router()
 router.post("/login", userController.signInUser)
 router.post("/register", userController.createUser)
 
-router.get("/", auth, userController.getAllUsers)
+router.route("/").get(auth, userController.getAllUsers)
+
+router
+  .route("/:id")
+  .get(auth, userController.getUser)
+  .put(auth, userController.updateUser)
+  .delete(auth, userController.deleteUser)
+
 router.get("/me", auth, userController.getCurrentUser)
-router.get("/:id", auth, userController.getUser)
-router.put("/:id", auth, userController.updateUser)
-router.patch("/:id", auth, userController.updateUser)
+// router.get("/", auth, userController.getAllUsers)
+// router.get("/:id", auth, userController.getUser)
+// router.put("/:id", auth, userController.updateUser)
+// router.patch("/:id", auth, userController.updateUser)
 router.put("/:id/password", auth, userController.updateUserPassword)
 router.put(
   "/:id/account/status",
@@ -27,7 +35,7 @@ router.put(
   userController.updateUserRole
 )
 
-router.delete("/:id", auth, userController.deleteUser)
+// router.delete("/:id", auth, userController.deleteUser)
 
 // Other routes
 router.get("/:id/posts", userController.allUserPosts)

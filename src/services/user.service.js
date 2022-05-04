@@ -3,7 +3,7 @@ import config from "../config/config.js"
 import User from "../db/models/user.model.js"
 
 import APIFeatures from "../utils/apiFeatures.js"
-import appError from "../utils/appError.js"
+import AppError from "../utils/appError.js"
 
 import { roles } from "../config/roles.js"
 import { hashPassword, comparePassword } from "../security/password/index.js"
@@ -31,11 +31,11 @@ export const findAll = async (queryString) => {
 export const signIn = async (email, password) => {
   try {
     if (!securityHelper.emailRegex.test(email)) {
-      throw new appError(400, "fail", "Invalid email format")
+      throw new AppError(400, "fail", "Invalid email format")
     }
 
     if (password.length < securityHelper.passwordLengthMin) {
-      throw new appError(
+      throw new AppError(
         400,
         "fail",
         `Password must be at least ${securityHelper.passwordLengthMin} characters`
@@ -45,7 +45,7 @@ export const signIn = async (email, password) => {
     const user = await findOneByField("email", email)
 
     if (!user) {
-      throw new appError(401, "fail", "Invalid email or password")
+      throw new AppError(401, "fail", "Invalid email or password")
     }
 
     const isPasswordValid = comparePassword(
@@ -55,11 +55,11 @@ export const signIn = async (email, password) => {
     )
 
     if (!isPasswordValid) {
-      throw new appError(401, "fail", "Invalid email or password")
+      throw new AppError(401, "fail", "Invalid email or password")
     }
 
     if (!user.isActive) {
-      throw new appError(
+      throw new AppError(
         401,
         "fail",
         "Your account is not active, please contact the administrator"
@@ -85,17 +85,17 @@ export const signIn = async (email, password) => {
 export const createOne = async (user) => {
   try {
     if (!securityHelper.emailRegex.test(user.email)) {
-      throw new appError(400, "fail", "Invalid email format")
+      throw new AppError(400, "fail", "Invalid email format")
     }
 
     const isUserExist = await findOneByField("email", user.email)
 
     if (isUserExist) {
-      throw new appError(409, "fail", "Email already exist")
+      throw new AppError(409, "fail", "Email already exist")
     }
 
     if (!securityHelper.passwordRegex.test(user.password)) {
-      throw new appError(400, "fail", securityHelper.passwordError)
+      throw new AppError(400, "fail", securityHelper.passwordError)
     }
 
     const [passwordHash, passwordSalt] = hashPassword(user.password)
@@ -115,7 +115,7 @@ export const findOneById = async (userId) => {
   try {
     const user = await User.query().findById(userId)
     if (!user) {
-      throw new appError(404, "fail", "No user found with that id")
+      throw new AppError(404, "fail", "No user found with that id")
     }
     return user
   } catch (error) {
@@ -129,13 +129,13 @@ export const updateOneWithPatch = async (userId, user) => {
 
     if (user.email) {
       if (!securityHelper.emailRegex.test(user.email)) {
-        throw new appError(400, "fail", "Invalid email format")
+        throw new AppError(400, "fail", "Invalid email format")
       }
 
       const userWithSameEmail = await findOneByField("email", user.email)
 
       if (userWithSameEmail && userWithSameEmail.id !== Number(userId)) {
-        throw new appError(409, "fail", "Email already exist")
+        throw new AppError(409, "fail", "Email already exist")
       }
     }
 
@@ -167,11 +167,11 @@ export const updatePassword = async (userId, oldPassword, newPassword) => {
     )
 
     if (!isPasswordValid) {
-      throw new appError(401, "fail", "Invalid old password")
+      throw new AppError(401, "fail", "Invalid old password")
     }
 
     if (!securityHelper.passwordRegex.test(newPassword)) {
-      throw new appError(400, "fail", securityHelper.passwordError)
+      throw new AppError(400, "fail", securityHelper.passwordError)
     }
 
     const isPasswordSame = comparePassword(
@@ -181,7 +181,7 @@ export const updatePassword = async (userId, oldPassword, newPassword) => {
     )
 
     if (isPasswordSame) {
-      throw new appError(409, "fail", "New password is the same as old one")
+      throw new AppError(409, "fail", "New password is the same as old one")
     }
 
     const [passwordHash, passwordSalt] = hashPassword(newPassword)
@@ -216,7 +216,7 @@ export const updateRole = async (userId, role) => {
     const rolesList = roles.map((role) => role.name)
 
     if (!rolesList.includes(role)) {
-      throw new appError(400, "fail", "Invalid role")
+      throw new AppError(400, "fail", "Invalid role")
     }
 
     await user.$query().patch({
@@ -294,19 +294,19 @@ export const canAccessUser = async (action, userId, targetUserId = null) => {
   try {
     const user = await User.query().findById(userId)
     if (!user) {
-      throw new appError(404, "fail", "No user found with that id")
+      throw new AppError(404, "fail", "No user found with that id")
     }
 
     let userTarger = null
     if (targetUserId) {
       userTarger = await User.query().findById(targetUserId)
       if (!userTarger) {
-        throw new appError(404, "fail", "No user found with that id")
+        throw new AppError(404, "fail", "No user found with that id")
       }
     }
 
     if (!isGranted(action, user, userTarger)) {
-      throw new appError(403, "fail", `You don't have permission to ${action}`)
+      throw new AppError(403, "fail", `You don't have permission to ${action}`)
     }
   } catch (error) {
     throw error

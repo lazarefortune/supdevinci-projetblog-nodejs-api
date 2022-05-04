@@ -3,7 +3,7 @@
  */
 
 import APIFeatures from "../utils/apiFeatures.js"
-import appError from "../utils/appError.js"
+import AppError from "../utils/appError.js"
 
 export const getAll = (Model) => async (req, res, next) => {
   try {
@@ -34,7 +34,7 @@ export const getOne = (Model) => async (req, res, next) => {
   try {
     const ressource = await Model.query().findById(elementId)
     if (!ressource) {
-      throw new appError(404, "fail", "No ressource found with that id")
+      throw new AppError(404, "fail", "No ressource found with that id")
     }
     res.status(200).json(ressource)
   } catch (error) {
