@@ -1,33 +1,39 @@
 ## 🌄 Backend d'un mini blog en Node JS
 
 ## Table of Contents
+
 1. [General Info](#general-info)
 2. [Prérequis](#prérequis)
 3. [Installation](#installation)
 4. [Collaboration](#collaboration)
 5. [FAQs](#faqs)
 
-## General Info 
-***
-Le but de ce projet est de créer une mini plateforme de blog en Node JS.
+## General Info
+
+---
+
+Le but de ce projet est de créer une mini plateforme de blog en Node JS et en Next JS.
 
 Nous avons choisi de créer un projet de blog en Node JS pour pouvoir tester nos connaissances en Node JS.
 
 Le projet se décompose en deux parties:
-* **Backend**: ce qui est fait en Node JS.
-* **Frontend**: ce qui est fait en Next JS.
+
+- **Backend**: ce qui est fait en Node JS.
+- **Frontend**: ce qui est fait en Next JS.
 
 Le backend est donc une API REST qui permet de gérer les données de notre blog.
 
+## Prérequis
 
-## Prérequis 
-***
+---
 
 Vous devez avoir [Node JS](https://nodejs.org/en/) sur votre machine.
 
-## Installation 
-***
-📦 Il vous faut installer l'ensemble des dépendances avec `npm` avec la commande suivante :
+## Installation
+
+---
+
+📦 Il vous faut installer l'ensemble des dépendances avec `npm` en suivant la commande suivante :
 
 ```bash
 npm install
@@ -39,19 +45,22 @@ npm install
 
 Vous pouvez copier le fichier `.env.example` et le renommer `.env` et remplacer les valeurs par défaut par vos propres valeurs.
 
-> NB: Pensez à bien créer vos bases de données avant d'utiliser l'application. 
+> NB: Pensez à bien créer vos bases de données avant d'utiliser l'application.
 
 ### Pour lancer les migrations
 
 ```bash
 npm run migrate
 ```
+
 ### Pour lancer les seeds (données de test)
+
 ```bash
 npm run seed
 ```
 
 ### Pour vider la base de données et les migrations
+
 ```bash
 npm run reset
 ```
@@ -62,26 +71,36 @@ npm run reset
 npm run reset:migrate
 npm run reset:migrate:seed
 ```
+
 ### ✅ Pour lancer le serveur
 
-* En mode production
+- En mode production
+
 ```bash
 npm run start
 ```
-* En mode développement
+
+- En mode développement
+
 ```bash
 npm run dev
 ```
-* Pour lancer les tests
+
+- Pour lancer les tests
+
 ```bash
 npm run test
 ```
-## Collaboration 
-***
-😊 😉 
+
+## Collaboration
+
+---
+
+😊 😉
 Si vous souhaitez contribuer à l'application, vous pouvez faire un fork sur [Github](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/fork) et commencer à développer.
 
 ## FAQs
-***
+
+---
 
 💬 💭 Si vous avez des questions, vous pouvez les poser sur le [Github Issue](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/issues) ou par mail à <lazarefortune@gmail.com>.
