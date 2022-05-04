@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.6.0...v2.6.1) (2022-05-04)
+
+
+### Bug Fixes
+
+* **tests:** fix - add end tests ([82d5e8a](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/82d5e8a291688a975ee43ddbd4b7c7bd65572e26))
+
 ## [2.6.0](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.5.6...v2.6.0) (2022-05-02)
 
 
