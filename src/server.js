@@ -13,11 +13,15 @@ process.on("uncaughtException", (err) => {
 const db = knex(config.db)
 Model.knex(db)
 
-// db.select()
-//   .from("knex_migrations")
-//   .then(() => {
-//     console.log("Connection to database success 👍");
-//   });
+// Check if the database is connected or not
+db.raw("select 1+1 as result")
+  .then(() => {
+    console.log("👌 Database connected")
+  })
+  .catch(() => {
+    console.log("❌ Database connection failed")
+    process.exit(1)
+  })
 
 // Start the server
 const PORT = config.port
