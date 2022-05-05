@@ -17,10 +17,6 @@ router
   .delete(auth, userController.deleteUser)
 
 router.get("/me", auth, userController.getCurrentUser)
-// router.get("/", auth, userController.getAllUsers)
-// router.get("/:id", auth, userController.getUser)
-// router.put("/:id", auth, userController.updateUser)
-// router.patch("/:id", auth, userController.updateUser)
 router.put("/:id/password", auth, userController.updateUserPassword)
 router.put(
   "/:id/account/status",
