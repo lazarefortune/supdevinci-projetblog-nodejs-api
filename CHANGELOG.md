@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.6.2...v3.0.0) (2022-05-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **app:** error response become an object
+
+### Features
+
+* **app:** change error response ([51ea628](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/51ea6288b2c5a850816bffb05b37965d4db18057))
+
+
+### Bug Fixes
+
+* **controller:** delete status in response when user sign in ([624dfd8](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/624dfd8806257fe170fc69a4bf631d06d057ed42))
+
 ### [2.6.2](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.6.1...v2.6.2) (2022-05-05)
 
 ### [2.6.1](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.6.0...v2.6.1) (2022-05-04)
