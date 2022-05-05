@@ -4,7 +4,7 @@ import helmet from "helmet"
 import xss from "xss-clean"
 import hpp from "hpp"
 import cors from "cors"
-import swaggerJsdoc from "swagger-jsdoc"
+import swaggerDocument from "../swagger.js"
 import swaggerUi from "swagger-ui-express"
 
 import userRoutes from "./routes/user.routes.js"
@@ -54,24 +54,8 @@ app.use(hpp())
 
 app.use(express.json())
 
-// TODO: Implement swagger
 // SWAGGER API DOCS
-const swaggerOptions = {
-  swaggerDefinition: {
-    info: {
-      title: "Blog API",
-      description: "Blog API informations",
-      contact: {
-        name: "Amazing developer",
-      },
-      servers: [{ url: "http://localhost/4000", description: "hello world" }],
-    },
-  },
-  apis: ["./src/routes/*.js"],
-}
-
-const swaggerDocs = swaggerJsdoc(swaggerOptions)
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Routes
 app.get("/", async (req, res) => {
