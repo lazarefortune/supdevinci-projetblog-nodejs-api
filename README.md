@@ -98,7 +98,7 @@ npm run test
 ## Documentation
 
 Pour consulter toute la documentation de l'API REST, il vous suffit de suivre le lien suivant : 
-URL_API_REST + `/docs`.
+URL_API_REST + `/api-docs`.
 Exemple : `http://localhost:4000/api-docs`
 
 
