@@ -5,12 +5,11 @@
 1. [General Info](#general-info)
 2. [Prérequis](#prérequis)
 3. [Installation](#installation)
-4. [Collaboration](#collaboration)
-5. [FAQs](#faqs)
+4. [Documentation](#documentation)
+5. [Collaboration](#collaboration)
+6. [FAQs](#faqs)
 
 ## General Info
-
----
 
 Le but de ce projet est de créer une mini plateforme de blog en Node JS et en Next JS.
 
@@ -23,21 +22,23 @@ Le projet se décompose en deux parties:
 
 Le backend est donc une API REST qui permet de gérer les données de notre blog.
 
-## Prérequis
 
 ---
+## Prérequis
 
 Vous devez avoir [Node JS](https://nodejs.org/en/) sur votre machine.
 
-## Installation
-
 ---
+## Installation
 
 📦 Il vous faut installer l'ensemble des dépendances avec `npm` en suivant la commande suivante :
 
 ```bash
 npm install
 ```
+
+---
+
 
 ### Configuration de l'application
 
@@ -92,15 +93,21 @@ npm run dev
 npm run test
 ```
 
-## Collaboration
+---
+
+## Documentation
+
+Pour consulter toute la documentation de l'API REST, il vous suffit de suivre le lien suivant : 
+URL_API_REST + `/docs`.
+Exemple : `http://localhost:4000/api-docs`
+
 
 ---
 
-😊 😉
+## Collaboration
+😊😉
 Si vous souhaitez contribuer à l'application, vous pouvez faire un fork sur [Github](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/fork) et commencer à développer.
 
-## FAQs
-
 ---
-
+## FAQs
 💬 💭 Si vous avez des questions, vous pouvez les poser sur le [Github Issue](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/issues) ou par mail à <lazarefortune@gmail.com>.
