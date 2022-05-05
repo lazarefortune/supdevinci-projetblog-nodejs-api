@@ -41,7 +41,6 @@ export const signInUser = async (req, res, next) => {
     const [user, token] = await userService.signIn(email, password)
 
     res.status(200).json({
-      status: "success",
       user,
       token,
     })
