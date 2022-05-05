@@ -4,7 +4,7 @@ import helmet from "helmet"
 import xss from "xss-clean"
 import hpp from "hpp"
 import cors from "cors"
-import swaggerDocument from "../swagger.js"
+import swaggerDocument from "../docs/swagger.js"
 import swaggerUi from "swagger-ui-express"
 
 import userRoutes from "./routes/user.routes.js"
