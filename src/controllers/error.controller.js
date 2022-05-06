@@ -8,7 +8,10 @@ export default (err, req, res, next) => {
     },
   }
 
-  if (config.environment === "production" && errorDatas.statusCode === 500) {
+  if (
+    config.environment === "production" &&
+    errorDatas.error.statusCode === 500
+  ) {
     errorDatas.error.message = "Internal Server Error"
   }
 
