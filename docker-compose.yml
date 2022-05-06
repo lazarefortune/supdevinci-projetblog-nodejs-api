@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - $APP_PORT:$APP_PORT
+    env_file: ./.env
+    environment:
+      - DB_HOST=mysqldb
+    depends_on: 
+      - mysqldb
+    stdin_open: true
+    tty: true
+
+  mysqldb:
+    image: mysql:latest
+    command: [mysqld, --default-authentication-plugin=mysql_native_password, --character-set-server=utf8]
+    container_name: mysqldb
+    env_file: ./.env
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+        - 5000:3306
+    environment:
+        MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+        MYSQL_DATABASE: $DB_NAME
+volumes:
+  mysql-data:
+    
