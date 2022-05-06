@@ -8,12 +8,16 @@ services:
     ports:
       - $APP_PORT:$APP_PORT
     env_file: ./.env
-    environment:
-      - DB_HOST=mysqldb
+    environment:      
+      DB_HOST: mysqldb
+      DB_HOSTNAME: mysqldb
     depends_on: 
-      - mysqldb
+      mysqldb: 
+        condition: service_healthy
     stdin_open: true
     tty: true
+    links:
+      - mysqldb
 
   mysqldb:
     image: mysql:latest
@@ -24,10 +28,17 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     ports:
-        - 5000:3306
+        - 3306:3306
+    expose:
+      - 3306
     environment:
         MYSQL_ROOT_PASSWORD: $DB_PASSWORD
         MYSQL_DATABASE: $DB_NAME
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
 volumes:
   mysql-data:
+
     

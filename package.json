@@ -12,6 +12,7 @@
     "migrate": "npx knex migrate:latest",
     "reset": "npx knex migrate:rollback",
     "seed": "npx knex seed:run",
+    "build": "npx knex migrate:latest && npx knex seed:run && npm run start",
     "reset:migrate:seed": "npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run",
     "reset:migrate": "npx knex migrate:rollback && npx knex migrate:latest",
     "prepare": "husky install",
