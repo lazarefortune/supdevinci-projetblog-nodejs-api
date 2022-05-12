@@ -10,13 +10,13 @@ router.post("/register", userController.createUser)
 
 router.route("/").get(auth, userController.getAllUsers)
 
+router.get("/me", auth, userController.getCurrentUser)
 router
   .route("/:id")
   .get(auth, userController.getUser)
   .put(auth, userController.updateUser)
   .delete(auth, userController.deleteUser)
 
-router.get("/me", auth, userController.getCurrentUser)
 router.put("/:id/password", auth, userController.updateUserPassword)
 router.put(
   "/:id/account/status",
