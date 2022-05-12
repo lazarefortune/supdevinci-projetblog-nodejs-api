@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v3.0.0...v3.0.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* **app:** change mysql to mysql2 ([4e062a3](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/commit/4e062a32fe1ef83e3925b7d189bb174f9f6070af))
+
 ## [3.0.0](https://github.com/lazarefortune/SupDeVinci-Projet-Blog-Backend/compare/v2.6.2...v3.0.0) (2022-05-05)
 
 
